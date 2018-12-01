@@ -9,10 +9,12 @@ import java.util.*;
 public class DemoMessageStore {
 	static final DemoMessageStore store = new DemoMessageStore();
 	File file = new File("data");
-	OutputStream out;
-	InputStream in;
+	FileOutputStream out;
+	FileInputStream in;
+	static BufferedOutputStream bufferout;   //static
+	BufferedInputStream bufferin;
 	//给每个consumer对应一个流
-	HashMap<String,InputStream> inMap = new HashMap<>();
+	HashMap<String,BufferedInputStream> inMap = new HashMap<>();
 
 	// 消息存储
 	//HashMap<String, ArrayList<ByteMessage>> msgs = new HashMap<>(); //msgs存储消息，为一个topic内的所有消息
@@ -21,7 +23,7 @@ public class DemoMessageStore {
 
 
 	// 加锁保证线程安全
-	/***
+	/**
 	 * @param msg
 	 * @param topic
 	 */
@@ -34,6 +36,7 @@ public class DemoMessageStore {
 			if(out == null) {
 				//StringBuilder builder = new StringBuilder();
 				out = new FileOutputStream(file, true);
+				bufferout = new BufferedOutputStream(out);
 			}
 				KeyValue headers = msg.headers();
 				Set<String> keyS = headers.keySet();
@@ -42,37 +45,42 @@ public class DemoMessageStore {
 					String key = it.next();
 					if (!key.equals(MessageHeader.TOPIC)) {
 
-						out.write((byte)key.getBytes().length); //存key长度
-						out.write(key.getBytes());//存key
-						out.write((byte)msg.headers().getString(key).getBytes().length);//存value长度
-						out.write(msg.headers().getString(key).getBytes());//存value
+						bufferout.write((byte)key.getBytes().length); //存key长度
+						bufferout.write(key.getBytes());//存key
+						bufferout.write((byte)msg.headers().getString(key).getBytes().length);//存value长度
+						bufferout.write(msg.headers().getString(key).getBytes());//存value
 
 					}
 				}
-				out.write((byte)(topic.getBytes().length + msg.getBody().length + 2));//存总长度，为一个字节
-				out.write((byte) topic.getBytes().length);//存topic长度信息，为一个字节
-				out.write(topic.getBytes());
-				out.write((byte) msg.getBody().length);//存body长度信息,为一个字节
-				out.write(msg.getBody());
+				bufferout.write((byte)(topic.getBytes().length + msg.getBody().length + 2));//存总长度，为一个字节
+			    bufferout.write((byte) topic.getBytes().length);//存topic长度信息，为一个字节
+			    bufferout.write(topic.getBytes());
+			    bufferout.write((byte) msg.getBody().length);//存body长度信息,为一个字节
+			    bufferout.write(msg.getBody());
+			    //bufferout.flush();
 
 
 		}catch (IOException e){
 			e.printStackTrace();
 		}
+
 	}
 
 
 	// 加锁保证线程安全
 	public synchronized ByteMessage pull(String queue, List<String> topics) {
 		try {
-			if (!inMap.containsKey(queue))
-				inMap.put(queue, new FileInputStream(file));
+			if (!inMap.containsKey(queue)) {
+				in = new FileInputStream(file);
+				bufferin = new BufferedInputStream(in);
+				inMap.put(queue, bufferin);
+			}
 			//每个queue都有一个InputStream
 			//********** 第四处 **********
-			in = inMap.get(queue);
+			bufferin = inMap.get(queue);
 
 			//********** 第四处 **********
-			if (in.available() ==0) {
+			if (bufferin.available() ==0) {
 				return null;
 			}
 			byte[] byteTopic;
@@ -84,51 +92,51 @@ public class DemoMessageStore {
 			//每次循环读一个message的数据量
 			do {
 
-				byte key1len = (byte)in.read();
+				byte key1len = (byte)bufferin.read();
 				if (key1len==-1)
 					return null;
 				key1 = new byte[key1len];
-				in.read(key1);
+				bufferin.read(key1);
 				Skey1 = new String(key1);
-				byte value1len = (byte)in.read();
+				byte value1len = (byte)bufferin.read();
 				value1 = new byte[value1len];
-				in.read(value1);
+				bufferin.read(value1);
 				Svalue1 = new String(value1);
 
-				byte key2len = (byte)in.read();
+				byte key2len = (byte)bufferin.read();
 				key2 = new byte[key2len];
-				in.read(key2);
+				bufferin.read(key2);
 				Skey2 = new String(key2);
-				byte value2len = (byte)in.read();
+				byte value2len = (byte)bufferin.read();
 				value2 = new byte[value2len];
-				in.read(value2);
+				bufferin.read(value2);
 				Svalue2 = new String(value2);
 
-				byte key3len = (byte)in.read();
+				byte key3len = (byte)bufferin.read();
 				key3 = new byte[key3len];
-				in.read(key3);
+				bufferin.read(key3);
 				Skey3 = new String(key3);
-				byte value3len = (byte)in.read();
+				byte value3len = (byte)bufferin.read();
 				value3 = new byte[value3len];
-				in.read(value3);
+				bufferin.read(value3);
 				Svalue3 = new String(value3);
 
-				byte key4len = (byte)in.read();
+				byte key4len = (byte)bufferin.read();
 				key4 = new byte[key4len];
-				in.read(key4);
+				bufferin.read(key4);
 				Skey4 = new String(key4);
-				byte value4len = (byte)in.read();
+				byte value4len = (byte)bufferin.read();
 				value4 = new byte[value4len];
-				in.read(value4);
+				bufferin.read(value4);
 				Svalue4 = new String(value4);
 
-				byte lenTotal = (byte) in.read();
+				byte lenTotal = (byte) bufferin.read();
 				//读到文件尾了，则lenTotal为-1
 				//if(lenTotal==-1)
 					//return null;
 
 				byte[] byteTotal = new byte[lenTotal];
-				in.read(byteTotal);
+				bufferin.read(byteTotal);
 				byte lenTopic = byteTotal[0];
 				byteTopic = new byte[lenTopic];
 				System.arraycopy(byteTotal, 1, byteTopic, 0, lenTopic);//chucuo
