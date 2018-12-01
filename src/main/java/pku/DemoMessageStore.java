@@ -21,7 +21,7 @@ public class DemoMessageStore {
 
 
 	// 加锁保证线程安全
-	/**
+	/***
 	 * @param msg
 	 * @param topic
 	 */
