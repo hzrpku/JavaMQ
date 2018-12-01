@@ -1,16 +1,21 @@
 package pku;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.*;
+import java.util.*;
 
 /**
  * 这是一个消息队列的内存实现
  */
 public class DemoMessageStore {
 	static final DemoMessageStore store = new DemoMessageStore();
+	File file = new File("data");
+	OutputStream out;
+	InputStream in;
+	//给每个consumer对应一个流
+	HashMap<String,InputStream> inMap = new HashMap<>();
 
 	// 消息存储
-	HashMap<String, ArrayList<ByteMessage>> msgs = new HashMap<>();
+	//HashMap<String, ArrayList<ByteMessage>> msgs = new HashMap<>(); //msgs存储消息，为一个topic内的所有消息
 	// 遍历指针
 	HashMap<String, Integer> readPos = new HashMap<>();
 
@@ -24,34 +29,128 @@ public class DemoMessageStore {
 		if (msg == null) {
 			return;
 		}
-		if (!msgs.containsKey(topic)) {
-			msgs.put(topic, new ArrayList<>());
-		}
-		// 加入消息
-		msgs.get(topic).add(msg);
+		try{
 
+			if(out == null) {
+				//StringBuilder builder = new StringBuilder();
+				out = new FileOutputStream(file, true);
+			}
+				KeyValue headers = msg.headers();
+				Set<String> keyS = headers.keySet();
+				Iterator<String> it = keyS.iterator();
+				while (it.hasNext()){
+					String key = it.next();
+					if (!key.equals(MessageHeader.TOPIC)) {
+
+						out.write((byte)key.getBytes().length); //存key长度
+						out.write(key.getBytes());//存key
+						out.write((byte)msg.headers().getString(key).getBytes().length);//存value长度
+						out.write(msg.headers().getString(key).getBytes());//存value
+
+					}
+				}
+				out.write((byte)(topic.getBytes().length + msg.getBody().length + 2));//存总长度，为一个字节
+				out.write((byte) topic.getBytes().length);//存topic长度信息，为一个字节
+				out.write(topic.getBytes());
+				out.write((byte) msg.getBody().length);//存body长度信息,为一个字节
+				out.write(msg.getBody());
+
+
+		}catch (IOException e){
+			e.printStackTrace();
+		}
 	}
 
-	// 加锁保证线程安全
-	public synchronized ByteMessage pull(String queue, String topic) {
-		String k = queue + " " + topic;
-		if (!readPos.containsKey(k)) {
-			readPos.put(k, 0);
-		}
-		int pos = readPos.get(k);
-		if (!msgs.containsKey(topic)) {
-			return null;
-		}
 
-		ArrayList<ByteMessage> list = msgs.get(topic);
-		if (list.size() <= pos) {
-			return null;
-		} else {
-			ByteMessage msg = list.get(pos);
-			// 将键k的值+1，表示当前读到第pos个msg，下一次应该读+1个
-			readPos.put(k, pos + 1);
+	// 加锁保证线程安全
+	public synchronized ByteMessage pull(String queue, List<String> topics) {
+		try {
+			if (!inMap.containsKey(queue))
+				inMap.put(queue, new FileInputStream(file));
+			//每个queue都有一个InputStream
+			//********** 第四处 **********
+			in = inMap.get(queue);
+
+			//********** 第四处 **********
+			if (in.available() ==0) {
+				return null;
+			}
+			byte[] byteTopic;
+			byte[] body;
+			byte[] key1,key2,key3,key4;
+			byte[] value1,value2,value3,value4;
+			String Skey1,Skey2,Skey3,Skey4;
+			String Svalue1,Svalue2,Svalue3,Svalue4;
+			//每次循环读一个message的数据量
+			do {
+
+				byte key1len = (byte)in.read();
+				if (key1len==-1)
+					return null;
+				key1 = new byte[key1len];
+				in.read(key1);
+				Skey1 = new String(key1);
+				byte value1len = (byte)in.read();
+				value1 = new byte[value1len];
+				in.read(value1);
+				Svalue1 = new String(value1);
+
+				byte key2len = (byte)in.read();
+				key2 = new byte[key2len];
+				in.read(key2);
+				Skey2 = new String(key2);
+				byte value2len = (byte)in.read();
+				value2 = new byte[value2len];
+				in.read(value2);
+				Svalue2 = new String(value2);
+
+				byte key3len = (byte)in.read();
+				key3 = new byte[key3len];
+				in.read(key3);
+				Skey3 = new String(key3);
+				byte value3len = (byte)in.read();
+				value3 = new byte[value3len];
+				in.read(value3);
+				Svalue3 = new String(value3);
+
+				byte key4len = (byte)in.read();
+				key4 = new byte[key4len];
+				in.read(key4);
+				Skey4 = new String(key4);
+				byte value4len = (byte)in.read();
+				value4 = new byte[value4len];
+				in.read(value4);
+				Svalue4 = new String(value4);
+
+				byte lenTotal = (byte) in.read();
+				//读到文件尾了，则lenTotal为-1
+				//if(lenTotal==-1)
+					//return null;
+
+				byte[] byteTotal = new byte[lenTotal];
+				in.read(byteTotal);
+				byte lenTopic = byteTotal[0];
+				byteTopic = new byte[lenTopic];
+				System.arraycopy(byteTotal, 1, byteTopic, 0, lenTopic);//chucuo
+				body = new byte[lenTotal - 2 - lenTopic];
+				System.arraycopy(byteTotal,lenTopic+2,body,0,lenTotal - 2 - lenTopic);
+
+
+
+				//********** 第五处 **********
+			} while (!topics.contains(new String(byteTopic)));
+
+			ByteMessage msg = new DefaultMessage(body);
+			msg.putHeaders(Skey1,Svalue1);
+			msg.putHeaders(Skey2,Svalue2);
+			msg.putHeaders(Skey3,Svalue3);
+			msg.putHeaders(Skey4,Svalue4);
 			return msg;
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		return null;
+
 	}
 
 	

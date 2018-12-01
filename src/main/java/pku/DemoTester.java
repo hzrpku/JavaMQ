@@ -5,6 +5,7 @@ import pku.Consumer;
 import pku.MessageHeader;
 import pku.Producer;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class DemoTester {
     //每个pusher向每个topic发送的消息数目
-    static int PUSH_COUNT = 100;
+    static int PUSH_COUNT =100;
     //发送消息的线程数
     static int PUSH_THREAD_COUNT = 4;
     //发送线程往n个topic发消息
@@ -54,15 +55,18 @@ public class DemoTester {
         @Override
         public void run() {
             try {
-                for (int i = 0; i < topics.size(); i++) {
+                for (int i = 0; i < topics.size(); i++) { //对于每一个topic
                     String topic = topics.get(i);
-                    for (int j = 0; j < PUSH_COUNT; j++) {
+                    for (int j = 0; j < PUSH_COUNT; j++) {//每个pusher向每个topic发送的消息数目,为100
                         //topic加j作为数据部分
                         //j是序号, 在consumer中会用来校验顺序
                         byte[] data = (topic +" "+id + " " + j).getBytes();
                         ByteMessage msg = producer.createBytesMessageToTopic(topics.get(i), data);
                         //设置一个header
                         msg.putHeaders(MessageHeader.SEARCH_KEY, "hello");
+                        msg.putHeaders(MessageHeader.SHARDING_KEY, "hello");
+                        msg.putHeaders(MessageHeader.BORN_TIMESTAMP, "hello");
+                        msg.putHeaders(MessageHeader.PRIORITY, "hello");
                         //发送消息
                         producer.send(msg);
                         pushCount.incrementAndGet();
@@ -100,7 +104,7 @@ public class DemoTester {
             try {
                 //检查顺序, 保存每个topic-producer对应的序号, 新获得的序号必须严格+1
                 HashMap<String, Integer> posTable = new HashMap<>();
-                while (true) {
+                while (true) {//循环
                     ByteMessage msg = consumer.poll();
                     if (msg == null) {
                         System.out.println(String.format("thread pull %s",pc));
@@ -109,9 +113,9 @@ public class DemoTester {
                         byte[] data = msg.getBody();
                         String str = new String(data);
                         String[] strs = str.split(" ");
-                        String topic = strs[0];
-                        String prod = strs[1];
-                        int j = Integer.parseInt(strs[2]);
+                        String topic = strs[0];//topic
+                        String prod = strs[1];//线程id
+                        int j = Integer.parseInt(strs[2]);//j<=100
                         String mapkey=topic+" "+prod;
                         if (!posTable.containsKey(mapkey)) {
                             posTable.put(mapkey, 0);
@@ -120,6 +124,7 @@ public class DemoTester {
                             System.out.println(String.format("数据错误 topic %s 序号:%d", topic, j));
                             System.exit(0);
                         }
+
                         if (!msg.headers().getString(MessageHeader.SEARCH_KEY).equals("hello")) {
                             System.out.println(String.format("header错误 topic %s 序号:%d", topic, j));
                             System.exit(0);
@@ -142,13 +147,13 @@ public class DemoTester {
         System.out.println("开始push");
         long time1 = System.currentTimeMillis();
         ArrayList<Thread> pushers = new ArrayList<>();
-        for (int i = 0; i < PUSH_THREAD_COUNT; i++) {
-            //随机选择连续的topic
+        for (int i = 0; i < PUSH_THREAD_COUNT; i++) {//发送消息的线程数
+            //随机选择连续的topic,数量为10
             ArrayList<String> tops = new ArrayList<>();
-            int start = rand.nextInt(TOPIC_COUNT);
-            for (int j = 0; j < PUSH_TOPIC_COUNT; j++) {
-                int v = (start+j)%TOPIC_COUNT;
-                tops.add("topic"+Integer.toString(v));
+            int start = rand.nextInt(TOPIC_COUNT);//topic数量
+            for (int j = 0; j < PUSH_TOPIC_COUNT; j++) {//对每一个线程,往n个topic发消息,数量为10
+                int v = (start+j)%TOPIC_COUNT;//topic数量
+                tops.add("topic"+Integer.toString(v));//组成10个topic,topic的名字是topic+序号的形式
             }
             Thread t = new Thread(new PushTester(tops, i));
             t.start();
@@ -166,16 +171,16 @@ public class DemoTester {
         System.out.println("开始pull");
         int queue = 0;
         ArrayList<Thread> pullers = new ArrayList<>();
-        for (int i = 0; i < PULL_THREAD_COUNT; i++) {
+        for (int i = 0; i < PULL_THREAD_COUNT; i++) {//消费消息的线程数,为4
             //随机选择topic
             ArrayList<String> tops = new ArrayList<>();
-            int start = rand.nextInt(TOPIC_COUNT);
-            for (int j = 0; j < PULL_TOPIC_COUNT; j++) {
-                int v =(start+j)%TOPIC_COUNT;
+            int start = rand.nextInt(TOPIC_COUNT);//topic数量
+            for (int j = 0; j < PULL_TOPIC_COUNT; j++) {//每个消费者消费的topic数量,为10
+                int v =(start+j)%TOPIC_COUNT;//topic数量
                 tops.add("topic"+Integer.toString(v));
             }
             Thread t = new Thread(new PullTester(Integer.toString(queue), tops));
-            queue++;
+            queue++;//每个消费者建立一个queue，绑定到10个topic中
             t.start();
             pullers.add(t);
         }
@@ -188,6 +193,10 @@ public class DemoTester {
 
     public static void main(String args[]) {
         try {
+                File file = new File("data");
+                if (file.exists()){
+                    file.delete();
+                }
                 testPush();
                 testPull();
         } catch (Exception e) {

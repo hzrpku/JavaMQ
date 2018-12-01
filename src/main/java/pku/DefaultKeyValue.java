@@ -7,7 +7,7 @@ import java.util.Set;
  * 一个Key-Value的实现
  */
 public class DefaultKeyValue implements KeyValue{
-    private final HashMap<String, Object> kvs = new HashMap<>();
+    private final HashMap<String, Object> kvs = new HashMap<>(); //kvs为一个HashMap
 
     public Object getObj(String key) {
         return kvs.get(key);

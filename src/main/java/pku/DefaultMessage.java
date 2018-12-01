@@ -1,11 +1,11 @@
 package pku;
 
 /**
- *消息的实现
+ *消息对象的实现
  */
-public class DefaultMessage implements ByteMessage{
+public class DefaultMessage implements ByteMessage{ //实现一个接口
 
-    private KeyValue headers = new DefaultKeyValue();
+    private KeyValue headers = new DefaultKeyValue(); //headers为一个
     private byte[] body;
 
     public void setHeaders(KeyValue headers) {

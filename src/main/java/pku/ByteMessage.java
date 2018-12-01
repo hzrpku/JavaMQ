@@ -6,12 +6,12 @@ package pku;
  */
 public interface ByteMessage {
 
-    //设置消息头
-    void setHeaders(KeyValue headers);
-    //获取字节数据
-    byte[] getBody();
-    //设置字节数据
-    void setBody(byte[] body);
+
+    void setHeaders(KeyValue headers);//设置消息头
+
+    byte[] getBody();//获取字节数据
+
+    void setBody(byte[] body);//设置字节数据
 
     public KeyValue headers();
 
