@@ -121,14 +121,14 @@ public class DemoMessageStore {
 				bufferin.read(value3);
 				Svalue3 = new String(value3);
 
-			/*	byte key4len = (byte)bufferin.read();
+				byte key4len = (byte)bufferin.read();
 				key4 = new byte[key4len];
 				bufferin.read(key4);
 				Skey4 = new String(key4);
 				byte value4len = (byte)bufferin.read();
 				value4 = new byte[value4len];
 				bufferin.read(value4);
-				Svalue4 = new String(value4);*/
+				Svalue4 = new String(value4);
 
 				byte lenTotal = (byte) bufferin.read();
 				//读到文件尾了，则lenTotal为-1
@@ -152,7 +152,7 @@ public class DemoMessageStore {
 			msg.putHeaders(Skey1,Svalue1);
 			msg.putHeaders(Skey2,Svalue2);
 			msg.putHeaders(Skey3,Svalue3);
-			//msg.putHeaders(Skey4,Svalue4);
+			msg.putHeaders(Skey4,Svalue4);
 			return msg;
 		} catch (IOException e) {
 			e.printStackTrace();
