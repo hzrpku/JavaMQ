@@ -230,6 +230,7 @@ public class DemoMessageStore {
 			System.out.println(Svalue3+"-----");
 			System.out.println(Skey4);
 			System.out.println(Svalue4+"-----");
+			System.out.println(new String(body));
 			return msg;
 		} catch (IOException e) {
 			e.printStackTrace();

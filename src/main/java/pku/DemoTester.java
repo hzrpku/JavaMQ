@@ -64,7 +64,7 @@ public class DemoTester {
                         ByteMessage msg = producer.createBytesMessageToTopic(topics.get(i), data);
                         //设置一个header
                         msg.putHeaders(MessageHeader.SEARCH_KEY, "hello");
-                        msg.putHeaders(MessageHeader.SHARDING_KEY, 2344322);
+                        msg.putHeaders(MessageHeader.SHARDING_KEY, -1286082570);
                         //msg.putHeaders(MessageHeader.BORN_TIMESTAMP, "hellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohel");
                         msg.putHeaders(MessageHeader.PRIORITY, "helloworld");
                         msg.putHeaders(MessageHeader.BORN_HOST,"areyouok?");
@@ -131,7 +131,7 @@ public class DemoTester {
                             System.out.println(String.format("header错误 topic %s 序号:%d", topic, j));
                             System.exit(0);
                         }
-                        if (!(msg.headers().getInt(MessageHeader.SHARDING_KEY)==2344322)) {
+                        if (!(msg.headers().getInt(MessageHeader.SHARDING_KEY)==-1286082570)) {
                             System.out.println(String.format("header错误 topic %s 序号:%d", topic, j));
                             System.exit(0);
                         }
