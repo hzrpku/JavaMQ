@@ -20,6 +20,7 @@ public class Consumer {
         }
         queue = queueName; //queue可以绑定到多个topic中
         topics.addAll(t); //所有的topic加入到topics这个list中
+        System.out.println("I have attached");
     }
 
 
@@ -31,6 +32,7 @@ public class Consumer {
       //  for (int i = 0; i < topics.size(); i++) {
            // int index = (i + readPos) % topics.size();
             re = DemoMessageStore.store.pull(queue, topics);
+            System.out.println(topics+"----");
            // if (re != null) {
               //  readPos = index + 1;
               //  break;
