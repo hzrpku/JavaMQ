@@ -131,6 +131,10 @@ public class DemoTester {
                             System.out.println(String.format("header错误 topic %s 序号:%d", topic, j));
                             System.exit(0);
                         }
+                        if (!(msg.headers().getInt(MessageHeader.SHARDING_KEY)==2344322)) {
+                            System.out.println(String.format("header错误 topic %s 序号:%d", topic, j));
+                            System.exit(0);
+                        }
                         posTable.put(mapkey, posTable.get(mapkey) + 1);
                         pullCount.incrementAndGet();
                         pc++;
