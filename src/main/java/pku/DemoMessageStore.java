@@ -218,11 +218,11 @@ public class DemoMessageStore {
 			} while (!topics.contains(new String(byteTopic)));
 
 			ByteMessage msg = new DefaultMessage(body);
-			msg.putHeaders(Skey1,Svalue1);
-			msg.putHeaders(Skey2,Svalue2);
-			msg.putHeaders(Skey3,Svalue3);
-			msg.putHeaders(Skey4,Svalue4);
-			System.out.println(Skey1);
+			msg.headers().put(Skey1,Svalue1);
+			msg.headers().put(Skey2,Svalue2);
+			msg.headers().put(Skey3,Svalue3);
+			msg.headers().put(Skey4,Svalue4);
+		/*	System.out.println(Skey1);
 			System.out.println(Svalue1+"-----");
 			System.out.println(Skey2);
 			System.out.println(Svalue2+"-----");
@@ -231,7 +231,7 @@ public class DemoMessageStore {
 			System.out.println(Skey4);
 			System.out.println(Svalue4+"-----");
 			System.out.println(new String(body));
-
+			*/
 			return msg;
 		} catch (IOException e) {
 			e.printStackTrace();

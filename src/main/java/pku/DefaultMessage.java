@@ -4,7 +4,7 @@ package pku;
  *消息对象的实现
  */
 public class DefaultMessage implements ByteMessage{ //实现一个接口
-    public static int count=0;
+
     public KeyValue headers = new DefaultKeyValue(); //headers为一个
     private byte[] body;
 
@@ -30,25 +30,21 @@ public class DefaultMessage implements ByteMessage{ //实现一个接口
 
 
     public DefaultMessage putHeaders(String key, int value) {
-        count++;
         headers.put(key, value);
         return this;
     }
 
     public DefaultMessage putHeaders(String key, long value) {
-        count++;
         headers.put(key, value);
         return this;
     }
 
     public DefaultMessage putHeaders(String key, double value) {
-        count++;
         headers.put(key, value);
         return this;
     }
 
     public DefaultMessage putHeaders(String key, String value) {
-        count++;
         headers.put(key, value);
         return this;
     }
