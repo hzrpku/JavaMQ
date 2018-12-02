@@ -8,7 +8,7 @@ import java.util.*;
  */
 public class DemoMessageStore {
 	static final DemoMessageStore store = new DemoMessageStore();
-	File file = new File("data");
+	File file = new File("data/topic");
 	FileOutputStream out;
 	FileInputStream in;
 	static BufferedOutputStream bufferout;   //static
@@ -76,10 +76,10 @@ public class DemoMessageStore {
 				inMap.put(queue, bufferin);
 			}
 			//每个queue都有一个InputStream
-			//********** 第四处 **********
+			//********** 第四处 ************
 			bufferin = inMap.get(queue);
 
-			//********** 第四处 **********
+			//********** 第四处 ************
 			if (bufferin.available() ==0) {
 				return null;
 			}
