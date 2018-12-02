@@ -46,7 +46,7 @@ public class DefaultKeyValue implements KeyValue{
     }
 
     public double getDouble(String key) {
-        return Double.valueOf( kvs.getOrDefault(key, 0.0d).toString());
+        return (Double) kvs.getOrDefault(key, 0.0d);
     }
 
     public String getString(String key) {
