@@ -66,7 +66,7 @@ public class DemoTester {
                         msg.putHeaders(MessageHeader.SEARCH_KEY, "hello");
                         msg.putHeaders(MessageHeader.SHARDING_KEY, "hello");
                         msg.putHeaders(MessageHeader.BORN_TIMESTAMP, "hello");
-                        msg.putHeaders(MessageHeader.PRIORITY, "hello");
+                        //msg.putHeaders(MessageHeader.PRIORITY, "hello");
                         //发送消息
                         producer.send(msg);
                         pushCount.incrementAndGet();
