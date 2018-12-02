@@ -51,7 +51,7 @@ public class DemoMessageStore {
 
 
 	public synchronized void push(ByteMessage msg, String topic) {
-		byte[] valuelen;
+		byte[] valuelen,valuelen1;
 
 		if (msg == null) {
 			return;
@@ -80,12 +80,23 @@ public class DemoMessageStore {
 
 					}
 				}
-				bufferout.write((byte)(topic.getBytes().length + msg.getBody().length + 2));//存总长度，为一个字节
-			    bufferout.write((byte) topic.getBytes().length);//存topic长度信息，为一个字节
-			    bufferout.write(topic.getBytes());
-			    bufferout.write((byte) msg.getBody().length);//存body长度信息,为一个字节
-			    bufferout.write(msg.getBody());
-			    //bufferout.flush();
+				bufferout.write((byte)topic.getBytes().length);//存topic长度信息，为一个字节
+				bufferout.write(topic.getBytes());
+				int lenth1 = msg.getBody().length;
+				valuelen1 = intToByte(lenth1);
+				bufferout.write((byte)valuelen1.length);
+				bufferout.write(valuelen1);
+				bufferout.write(msg.getBody());
+			//bufferout.flush();
+
+
+				//bufferout.write((byte)(topic.getBytes().length + msg.getBody().length + 2));//存总长度，为一个字节
+			    //bufferout.write((byte) topic.getBytes().length);//存topic长度信息，为一个字节
+			    //bufferout.write(topic.getBytes());
+			    //bufferout.write((byte) msg.getBody().length);//存body长度信息,为一个字节
+			    //bufferout.write(msg.getBody());
+
+
 
 
 		}catch (IOException e){
@@ -115,7 +126,7 @@ public class DemoMessageStore {
 			byte[] body;
 			byte[] key1,key2,key3,key4;
 			byte[] value1,value2,value3,value4;
-			byte[] len1,len2,len3,len4;
+			byte[] len1,len2,len3,len4,len;
 			String Skey1,Skey2,Skey3,Skey4;
 			String Svalue1,Svalue2,Svalue3,Svalue4;
 			//每次循环读一个message的数据量
@@ -175,21 +186,31 @@ public class DemoMessageStore {
 				Svalue4 = new String(value4);
 				//System.out.println(Svalue3);
 
+				byte topiclen = (byte)bufferin.read();//topic读取
+				byteTopic = new byte[topiclen];
+				bufferin.read(byteTopic);
+
+				byte bodylen = (byte)bufferin.read();//body读取
+				len = new byte[bodylen];
+				bufferin.read(len);
+				int lenbody = Byte2Int(len);
+				body = new byte[lenbody];
+				bufferin.read(body);
 
 
 
-				int lenTotal = (int) bufferin.read();
+				//int lenTotal = (int) bufferin.read();
 				//读到文件尾了，则lenTotal为-1
 				//if(lenTotal==-1)
 					//return null;
 
-				byte[] byteTotal = new byte[lenTotal];
-				bufferin.read(byteTotal);
-				int lenTopic = byteTotal[0];
-				byteTopic = new byte[lenTopic];
-				System.arraycopy(byteTotal, 1, byteTopic, 0, lenTopic);//chucuo
-				body = new byte[lenTotal - 2 - lenTopic];
-				System.arraycopy(byteTotal,lenTopic+2,body,0,lenTotal - 2 - lenTopic);
+				//byte[] byteTotal = new byte[lenTotal];
+				//bufferin.read(byteTotal);
+				//int lenTopic = byteTotal[0];
+				//byteTopic = new byte[lenTopic];
+				//System.arraycopy(byteTotal, 1, byteTopic, 0, lenTopic);//chucuo
+				//body = new byte[lenTotal - 2 - lenTopic];
+				//System.arraycopy(byteTotal,lenTopic+2,body,0,lenTotal - 2 - lenTopic);
 
 
 
