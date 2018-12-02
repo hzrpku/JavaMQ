@@ -65,8 +65,9 @@ public class DemoTester {
                         //设置一个header
                         msg.putHeaders(MessageHeader.SEARCH_KEY, "hello");
                         msg.putHeaders(MessageHeader.SHARDING_KEY, "whatwhat");
-                        //msg.putHeaders(MessageHeader.BORN_TIMESTAMP, "hellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohel");
-                        msg.putHeaders(MessageHeader.PRIORITY, "helloworld");
+                        msg.putHeaders(MessageHeader.BORN_TIMESTAMP, "hellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohel");
+                        //msg.putHeaders(MessageHeader.PRIORITY, "helloworld");
+                        msg.putHeaders(MessageHeader.BORN_HOST,"areyouok?");
                         //发送消息
                         producer.send(msg);
                         pushCount.incrementAndGet();

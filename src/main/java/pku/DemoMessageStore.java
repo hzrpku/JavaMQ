@@ -162,6 +162,18 @@ public class DemoMessageStore {
 				Svalue3 = new String(value3);
 				//System.out.println(Svalue3);
 
+				byte key4len = (byte)bufferin.read();
+				key4 = new byte[key4len];
+				bufferin.read(key4);
+				Skey4 = new String(key4);
+				byte byteoflen4 = (byte)bufferin.read();
+				len4 = new byte[byteoflen4];
+				bufferin.read(len4);
+				int len44 = Byte2Int(len4);
+				value4 = new byte[len44];
+				bufferin.read(value4);
+				Svalue4 = new String(value4);
+				//System.out.println(Svalue3);
 
 
 
@@ -188,7 +200,7 @@ public class DemoMessageStore {
 			msg.putHeaders(Skey1,Svalue1);
 			msg.putHeaders(Skey2,Svalue2);
 			msg.putHeaders(Skey3,Svalue3);
-			//msg.putHeaders(Skey4,Svalue4);
+			msg.putHeaders(Skey4,Svalue4);
 			return msg;
 		} catch (IOException e) {
 			e.printStackTrace();
