@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class DemoTester {
     //每个pusher向每个topic发送的消息数目
-    static int PUSH_COUNT =1000;
+    static int PUSH_COUNT =100;
     //发送消息的线程数
     static int PUSH_THREAD_COUNT = 4;
     //发送线程往n个topic发消息
@@ -64,9 +64,9 @@ public class DemoTester {
                         ByteMessage msg = producer.createBytesMessageToTopic(topics.get(i), data);
                         //设置一个header
                         msg.putHeaders(MessageHeader.SEARCH_KEY, "hello");
-                        msg.putHeaders(MessageHeader.SHARDING_KEY, "hello");
-                        msg.putHeaders(MessageHeader.BORN_TIMESTAMP, "hello");
-                        //msg.putHeaders(MessageHeader.PRIORITY, "hello");
+                        msg.putHeaders(MessageHeader.SHARDING_KEY, "whatwhat");
+                        //msg.putHeaders(MessageHeader.BORN_TIMESTAMP, "hellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohel");
+                        msg.putHeaders(MessageHeader.PRIORITY, "helloworld");
                         //发送消息
                         producer.send(msg);
                         pushCount.incrementAndGet();
