@@ -222,10 +222,14 @@ public class DemoMessageStore {
 			msg.putHeaders(Skey2,Svalue2);
 			msg.putHeaders(Skey3,Svalue3);
 			msg.putHeaders(Skey4,Svalue4);
-			System.out.println(Svalue1);
-			System.out.println(Svalue2);
-			System.out.println(Svalue3);
-			System.out.println(Svalue4);
+			System.out.println(Skey1);
+			System.out.println(Svalue1+"-----");
+			System.out.println(Skey2);
+			System.out.println(Svalue2+"-----");
+			System.out.println(Skey3);
+			System.out.println(Svalue3+"-----");
+			System.out.println(Skey4);
+			System.out.println(Svalue4+"-----");
 			return msg;
 		} catch (IOException e) {
 			e.printStackTrace();
