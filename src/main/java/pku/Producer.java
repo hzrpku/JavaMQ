@@ -38,6 +38,6 @@ public class Producer {
       //  out = new FileOutputStream(file,true);
        // bufferout = new BufferedOutputStream(out);///
         DemoMessageStore.bufferout.flush();
-        System.out.println("hzr");
+        //System.out.println("hzr");
     }
 }

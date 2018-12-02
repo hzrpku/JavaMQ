@@ -172,7 +172,7 @@ public class DemoMessageStore {
 				bufferin.read(value3);
 				Svalue3 = new String(value3);
 				//System.out.println(Svalue3);
-
+/*
 				byte key4len = (byte)bufferin.read();
 				key4 = new byte[key4len];
 				bufferin.read(key4);
@@ -185,6 +185,7 @@ public class DemoMessageStore {
 				bufferin.read(value4);
 				Svalue4 = new String(value4);
 				//System.out.println(Svalue3);
+				*/
 
 				byte topiclen = (byte)bufferin.read();//topic读取
 				byteTopic = new byte[topiclen];
@@ -221,7 +222,7 @@ public class DemoMessageStore {
 			msg.putHeaders(Skey1,Svalue1);
 			msg.putHeaders(Skey2,Svalue2);
 			msg.putHeaders(Skey3,Svalue3);
-			msg.putHeaders(Skey4,Svalue4);
+			//msg.putHeaders(Skey4,Svalue4);
 		/*	System.out.println(Skey1);
 			System.out.println(Svalue1+"-----");
 			System.out.println(Skey2);
