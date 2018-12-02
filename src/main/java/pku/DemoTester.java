@@ -67,7 +67,7 @@ public class DemoTester {
                         msg.putHeaders(MessageHeader.SHARDING_KEY, -1286082570);
                         //msg.putHeaders(MessageHeader.BORN_TIMESTAMP, "hellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohel");
                         msg.putHeaders(MessageHeader.PRIORITY, "helloworld");
-                        //msg.putHeaders(MessageHeader.BORN_HOST,"areyouok?");
+                        msg.putHeaders(MessageHeader.BORN_HOST,"areyouok?");
                         //发送消息
                         producer.send(msg);
                         pushCount.incrementAndGet();

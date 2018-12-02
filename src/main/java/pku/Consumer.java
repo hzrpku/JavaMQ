@@ -27,6 +27,9 @@ public class Consumer {
     //每次消费读取一个message
     public ByteMessage poll() {
         ByteMessage re = null;
+        System.out.println(DemoTester.PULL_TOPIC_COUNT);
+        System.out.println(DemoTester.ATTACH_COUNT);
+
         //先读第一个topic, 再读第二个topic...
         //直到所有topic都读完了, 返回null, 表示无消息
       //  for (int i = 0; i < topics.size(); i++) {
