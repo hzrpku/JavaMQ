@@ -38,7 +38,7 @@ public class DefaultKeyValue implements KeyValue{
     }
 
     public int getInt(String key) {
-        return Integer.parseInt( kvs.getOrDefault(key, 0).toString());
+        return (Integer) kvs.getOrDefault(key, 0);
     }
 
     public long getLong(String key) {
@@ -50,7 +50,7 @@ public class DefaultKeyValue implements KeyValue{
     }
 
     public String getString(String key) {
-        return  kvs.getOrDefault(key, null).toString();
+        return  (String) kvs.getOrDefault(key, null);
     }
 
     public Set<String> keySet() {
