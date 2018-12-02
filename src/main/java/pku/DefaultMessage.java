@@ -5,7 +5,7 @@ package pku;
  */
 public class DefaultMessage implements ByteMessage{ //实现一个接口
 
-    private KeyValue headers = new DefaultKeyValue(); //headers为一个
+    public KeyValue headers = new DefaultKeyValue(); //headers为一个
     private byte[] body;
 
     public void setHeaders(KeyValue headers) {

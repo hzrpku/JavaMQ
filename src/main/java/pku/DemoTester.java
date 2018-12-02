@@ -64,7 +64,7 @@ public class DemoTester {
                         ByteMessage msg = producer.createBytesMessageToTopic(topics.get(i), data);
                         //设置一个header
                         msg.putHeaders(MessageHeader.SEARCH_KEY, "hello");
-                        msg.putHeaders(MessageHeader.SHARDING_KEY, "whatwhat");
+                        msg.putHeaders(MessageHeader.SHARDING_KEY, 2344322);
                         //msg.putHeaders(MessageHeader.BORN_TIMESTAMP, "hellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohel");
                         msg.putHeaders(MessageHeader.PRIORITY, "helloworld");
                         msg.putHeaders(MessageHeader.BORN_HOST,"areyouok?");
