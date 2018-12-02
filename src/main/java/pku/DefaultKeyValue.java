@@ -50,7 +50,7 @@ public class DefaultKeyValue implements KeyValue{
     }
 
     public String getString(String key) {
-        return (String) kvs.getOrDefault(key, null);
+        return  kvs.getOrDefault(key, null).toString();
     }
 
     public Set<String> keySet() {
