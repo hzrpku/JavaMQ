@@ -36,7 +36,7 @@ public class Producer {
     //处理将缓存区的剩余部分
     public void flush()throws Exception{
       //  out = new FileOutputStream(file,true);
-       // bufferout = new BufferedOutputStream(out);
+       // bufferout = new BufferedOutputStream(out);///
         DemoMessageStore.bufferout.flush();
     }
 }
