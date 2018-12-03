@@ -29,6 +29,8 @@ public class Consumer {
     public synchronized ByteMessage poll() {
         ByteMessage re ;
         re = DemoMessageStore.store.pull(queue, topics);
+
+
         return re;
     }
 

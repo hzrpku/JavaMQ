@@ -65,10 +65,10 @@ public class DemoTester {
                         //设置一个header
                         msg.putHeaders(MessageHeader.SEARCH_KEY, "1");
                         msg.putHeaders(MessageHeader.SHARDING_KEY, 11);
-                        //msg.putHeaders(MessageHeader.BORN_TIMESTAMP, "hellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohel");
+                        msg.putHeaders(MessageHeader.BORN_TIMESTAMP, "lohellohl");
                         msg.putHeaders(MessageHeader.PRIORITY, "2");
                         msg.putHeaders(MessageHeader.BORN_HOST,"a3?");
-                        msg.putHeaders(MessageHeader.BORN_TIMESTAMP,"sss");
+                        //msg.putHeaders(MessageHeader.BORN_TIMESTAMP,"sss");
                         msg.putHeaders(MessageHeader.TRACE_ID,"sssd");
                         msg.putHeaders(MessageHeader.MESSAGE_ID,"ss");
                         msg.putHeaders(MessageHeader.RELIABILITY,"ssa");
@@ -129,7 +129,7 @@ public class DemoTester {
                         String topic = strs[0];//topic
                         String prod = strs[1];//线程id
                         int j = Integer.parseInt(strs[2]);//j<=100
-                        System.out.println("topic是"+topic+"  线程:"+prod+"  id为  "+Integer.toString(j));
+                        //System.out.println("topic是"+topic+"  线程:"+prod+"  id为  "+Integer.toString(j));
                         String mapkey=topic+" "+prod;
                         if (!posTable.containsKey(mapkey)) {
                             posTable.put(mapkey, 0);
