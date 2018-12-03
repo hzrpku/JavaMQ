@@ -63,22 +63,22 @@ public class DemoTester {
                         byte[] data = (topic +" "+id + " " + j).getBytes();
                         ByteMessage msg = producer.createBytesMessageToTopic(topics.get(i), data);
                         //设置一个header
-                        msg.putHeaders(MessageHeader.SEARCH_KEY, "hello");
-                        msg.putHeaders(MessageHeader.SHARDING_KEY, -1286082570);
+                        msg.putHeaders(MessageHeader.SEARCH_KEY, "1");
+                        msg.putHeaders(MessageHeader.SHARDING_KEY, 11);
                         //msg.putHeaders(MessageHeader.BORN_TIMESTAMP, "hellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohel");
-                        msg.putHeaders(MessageHeader.PRIORITY, "helloworld");
-                        msg.putHeaders(MessageHeader.BORN_HOST,"areyouok?");
-                        msg.putHeaders(MessageHeader.BORN_TIMESTAMP,"sssss");
-                        msg.putHeaders(MessageHeader.TRACE_ID,"sssdad");
-                        msg.putHeaders(MessageHeader.MESSAGE_ID,"sss");
-                        msg.putHeaders(MessageHeader.RELIABILITY,"sssa");
-                        msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,"asdwed");
-                        msg.putHeaders(MessageHeader.SHARDING_PARTITION,"sdsds");
-                        msg.putHeaders(MessageHeader.START_TIME,"sdsd");
-                        msg.putHeaders(MessageHeader.STOP_TIME,"saaaaa");
-                        msg.putHeaders(MessageHeader.TIMEOUT,"sdsddddd");
-                        msg.putHeaders(MessageHeader.STORE_TIMESTAMP,233333);
-                        msg.putHeaders(MessageHeader.STORE_HOST,112333);
+                        msg.putHeaders(MessageHeader.PRIORITY, "2");
+                        msg.putHeaders(MessageHeader.BORN_HOST,"a3?");
+                        msg.putHeaders(MessageHeader.BORN_TIMESTAMP,"sss");
+                        msg.putHeaders(MessageHeader.TRACE_ID,"sssd");
+                        msg.putHeaders(MessageHeader.MESSAGE_ID,"ss");
+                        msg.putHeaders(MessageHeader.RELIABILITY,"ssa");
+                        msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,"wed");
+                        msg.putHeaders(MessageHeader.SHARDING_PARTITION,"ds");
+                        msg.putHeaders(MessageHeader.START_TIME,"ssd");
+                        msg.putHeaders(MessageHeader.STOP_TIME,"saaa");
+                        msg.putHeaders(MessageHeader.TIMEOUT,"sdsdd");
+                        msg.putHeaders(MessageHeader.STORE_TIMESTAMP,23);
+                        msg.putHeaders(MessageHeader.STORE_HOST,1123);
                         //发送消息
                         producer.send(msg);
                         pushCount.incrementAndGet();
@@ -127,9 +127,9 @@ public class DemoTester {
                         String str = new String(data);
                         String[] strs = str.split(" ");
                         String topic = strs[0];//topic
-                        //System.out.println(str);
                         String prod = strs[1];//线程id
                         int j = Integer.parseInt(strs[2]);//j<=100
+                        System.out.println("topic是"+topic+"  线程:"+prod+"  id为  "+Integer.toString(j));
                         String mapkey=topic+" "+prod;
                         if (!posTable.containsKey(mapkey)) {
                             posTable.put(mapkey, 0);
@@ -139,15 +139,15 @@ public class DemoTester {
                             System.exit(0);
                         }
 
-                        if (!msg.headers().getString(MessageHeader.SEARCH_KEY).equals("hello")) {
+                        if (!msg.headers().getString(MessageHeader.SEARCH_KEY).equals("1")) {
                             System.out.println(String.format("header错误 topic %s 序号:%d", topic, j));
                             System.exit(0);
                         }
-                        if (!(msg.headers().getInt(MessageHeader.SHARDING_KEY)==-1286082570)) {
+                        if (!(msg.headers().getInt(MessageHeader.SHARDING_KEY)==11)) {
                             System.out.println(String.format("header错误 topic %s 序号:%d", topic, j));
                             System.exit(0);
                         }
-                        if (!(msg.headers().getInt(MessageHeader.STORE_TIMESTAMP)==233333)) {
+                        if (!(msg.headers().getInt(MessageHeader.STORE_TIMESTAMP)==23)) {
                             System.out.println(String.format("header错误 topic %s 序号:%d", topic, j));
                             System.exit(0);
                         }
@@ -162,7 +162,7 @@ public class DemoTester {
 
         }
     }
-    static Random rand = new Random();
+    static Random rand = new Random(100);
 
     static void testPush()throws Exception{
         //topic的名字是topic+序号的形式

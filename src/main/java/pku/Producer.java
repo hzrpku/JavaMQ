@@ -29,7 +29,7 @@ public class Producer {
         return msg;
     }
     //将message发送出去
-    public void send(ByteMessage defaultMessage){
+    public synchronized void send(ByteMessage defaultMessage){
         String topic = defaultMessage.headers().getString(MessageHeader.TOPIC);
         DemoMessageStore.store.push(defaultMessage,topic);//?
 
