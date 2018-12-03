@@ -32,6 +32,7 @@ public class Producer {
     public void send(ByteMessage defaultMessage){
         String topic = defaultMessage.headers().getString(MessageHeader.TOPIC);
         DemoMessageStore.store.push(defaultMessage,topic);//?
+
     }
     //处理将缓存区的剩余部分
     public void flush()throws Exception{
