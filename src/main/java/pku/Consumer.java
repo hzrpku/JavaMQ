@@ -1,5 +1,6 @@
 package pku;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
  */
 
 public class Consumer {
-    List<String> topics = new LinkedList<>();
+    List<String> topics = new ArrayList<>();
     String queue=null;
 
     //将消费者订阅的topic进行绑定
