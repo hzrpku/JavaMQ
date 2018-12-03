@@ -21,7 +21,7 @@ public class DemoMessageStore {
 	// 遍历指针
 	HashMap<String, Integer> readPos = new HashMap<>();
 //****************//
-	private static byte[]intToByte(int num){
+	private synchronized static byte[]intToByte(int num){
 		byte[]bytes=new byte[4];
 		bytes[0]=(byte) ((num>>24)&0xff);
 		bytes[1]=(byte) ((num>>16)&0xff);
@@ -34,7 +34,7 @@ public class DemoMessageStore {
 	 * @param bytes
 	 * @return
 	 */
-	public int Byte2Int(byte[]bytes) {
+	public synchronized int Byte2Int(byte[]bytes) {
 		return (bytes[0]&0xff)<<24
 				| (bytes[1]&0xff)<<16
 				| (bytes[2]&0xff)<<8
