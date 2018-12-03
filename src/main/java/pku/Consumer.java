@@ -10,7 +10,6 @@ import java.util.List;
 
 public class Consumer {
     List<String> topics = new LinkedList<>();
-    int readPos = 0;
     String queue=null;
 
     //将消费者订阅的topic进行绑定
@@ -29,8 +28,6 @@ public class Consumer {
     public synchronized ByteMessage poll() {
         ByteMessage re ;
         re = DemoMessageStore.store.pull(queue, topics);
-
-
         return re;
     }
 

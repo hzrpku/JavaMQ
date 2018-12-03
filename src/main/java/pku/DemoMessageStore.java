@@ -118,9 +118,9 @@ public class DemoMessageStore {
 			//每个queue都有一个InputStream
 			bufferin = inMap.get(queue);
 
-			if (bufferin.available() ==0) {
-				return null;
-			}
+		//	if (bufferin.available() ==0) {
+		//		return null;
+		//	}
 			byte[] byteTopic;
 			byte[] body;
 			byte[] key1,key2,key3,key4,key5,key6,key7,key8,key9,key10,key11,key12,key13,key14,key15;
@@ -360,22 +360,23 @@ public class DemoMessageStore {
 			} while (!topics.contains(new String(byteTopic)));
 
 			ByteMessage msg = new DefaultMessage(body);
-			msg.headers().put(Skey1,Svalue1);
-			msg.headers().put(Skey2,Svalue2);
-			msg.headers().put(Skey3,Svalue3);
-			msg.headers().put(Skey4,Svalue4);
-			msg.headers().put(Skey5,Svalue5);
-			msg.headers().put(Skey6,Svalue6);
-			msg.headers().put(Skey7,Svalue7);
-			msg.headers().put(Skey8,Svalue8);
-			msg.headers().put(Skey9,Svalue9);
-			msg.headers().put(Skey10,Svalue10);
-			msg.headers().put(Skey11,Svalue11);
-			msg.headers().put(Skey12,Svalue12);
-			msg.headers().put(Skey13,Svalue13);
-			msg.headers().put(Skey14,Svalue14);
-			msg.headers().put(Skey15,Svalue15);
-			msg.headers().put(MessageHeader.TOPIC,new String(byteTopic));
+			msg.putHeaders(Skey1,Svalue1);
+			msg.putHeaders(Skey2,Svalue2);
+			msg.putHeaders(Skey3,Svalue3);
+			msg.putHeaders(Skey4,Svalue4);
+			msg.putHeaders(Skey5,Svalue5);
+			msg.putHeaders(Skey6,Svalue6);
+			msg.putHeaders(Skey7,Svalue7);
+			msg.putHeaders(Skey8,Svalue8);
+			msg.putHeaders(Skey9,Svalue9);
+			msg.putHeaders(Skey10,Svalue10);
+			msg.putHeaders(Skey11,Svalue11);
+			msg.putHeaders(Skey12,Svalue12);
+			msg.putHeaders(Skey13,Svalue13);
+			msg.putHeaders(Skey14,Svalue14);
+			msg.putHeaders(Skey15,Svalue15);
+			msg.putHeaders(MessageHeader.TOPIC,new String(byteTopic));
+			System.out.println(new String(body));
 			return msg;
 		} catch (IOException e) {
 			e.printStackTrace();
