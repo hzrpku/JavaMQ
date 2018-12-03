@@ -115,13 +115,11 @@ public class DemoMessageStore {
 				inMap.put(queue, bufferin);
 			}
 			//每个queue都有一个InputStream
-			//********** 第四处 ************
 			bufferin = inMap.get(queue);
 
-			//********** 第四处 ************
-			if (bufferin.available() ==0) {
-				return null;
-			}
+		//	if (bufferin.available() ==0) {
+		//		return null;
+		//	}
 			byte[] byteTopic;
 			byte[] body;
 			byte[] key1,key2,key3,key4;
