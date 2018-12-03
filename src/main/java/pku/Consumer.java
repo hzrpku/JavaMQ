@@ -14,7 +14,7 @@ public class Consumer {
     String queue;
 
     //将消费者订阅的topic进行绑定
-    public void attachQueue(String queueName, Collection<String> t) throws Exception {
+    public synchronized void attachQueue(String queueName, Collection<String> t) throws Exception {
         if (queue != null) {
             throw new Exception("只允许绑定一次");
         }
