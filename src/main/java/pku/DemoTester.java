@@ -127,7 +127,7 @@ public class DemoTester {
                         String str = new String(data);
                         String[] strs = str.split(" ");
                         String topic = strs[0];//topic
-                        System.out.println(str);
+                        //System.out.println(str);
                         String prod = strs[1];//线程id
                         int j = Integer.parseInt(strs[2]);//j<=100
                         String mapkey=topic+" "+prod;

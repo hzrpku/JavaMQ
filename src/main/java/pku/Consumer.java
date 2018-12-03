@@ -26,7 +26,7 @@ public class Consumer {
 
     //每次消费读取一个message
     public synchronized ByteMessage poll() {
-        ByteMessage re = null ;
+        ByteMessage re ;
 
         //先读第一个topic, 再读第二个topic...
         //直到所有topic都读完了, 返回null, 表示无消息
