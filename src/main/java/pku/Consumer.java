@@ -31,7 +31,7 @@ public class Consumer {
         //先读第一个topic, 再读第二个topic...
         //直到所有topic都读完了, 返回null, 表示无消息
         for (int i = 0; i < topics.size(); i++) {
-            int index = (i + readPos) % topics.size();
+            int index = (i + readPos) % topics.size();//%10
             re = DemoMessageStore.store.pull(queue, topics);
             //System.out.println(topics+"----");
             if (re != null) {

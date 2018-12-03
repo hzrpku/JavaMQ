@@ -20,7 +20,7 @@ public class DemoMessageStore {
 	//HashMap<String, ArrayList<ByteMessage>> msgs = new HashMap<>(); //msgs存储消息，为一个topic内的所有消息
 	// 遍历指针
 	HashMap<String, Integer> readPos = new HashMap<>();
-
+//****************//
 	private static byte[]intToByte(int num){
 		byte[]bytes=new byte[4];
 		bytes[0]=(byte) ((num>>24)&0xff);
@@ -42,7 +42,7 @@ public class DemoMessageStore {
 	}
 
 
-
+//*********************//
 	// 加锁保证线程安全
 	/**
 	 * @param msg
@@ -222,6 +222,7 @@ public class DemoMessageStore {
 			msg.headers().put(Skey2,Svalue2);
 			msg.headers().put(Skey3,Svalue3);
 			msg.headers().put(Skey4,Svalue4);
+			msg.headers().put(MessageHeader.TOPIC,new String(byteTopic));
 		/*	System.out.println(Skey1);
 			System.out.println(Svalue1+"-----");
 			System.out.println(Skey2);
