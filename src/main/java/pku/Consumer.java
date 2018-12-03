@@ -11,7 +11,7 @@ import java.util.List;
 public class Consumer {
     List<String> topics = new LinkedList<>();
     int readPos = 0;
-    String queue;
+    String queue=null;
 
     //将消费者订阅的topic进行绑定
     public synchronized void attachQueue(String queueName, Collection<String> t) throws Exception {
