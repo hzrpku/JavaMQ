@@ -2,6 +2,7 @@ package pku;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 这是一个消息队列的内存实现
@@ -14,7 +15,7 @@ public class DemoMessageStore {
 	static BufferedOutputStream bufferout;   //static
 	BufferedInputStream bufferin;
 	//给每个consumer对应一个流
-	HashMap<String,BufferedInputStream> inMap = new HashMap<>();
+	ConcurrentHashMap<String,BufferedInputStream> inMap = new ConcurrentHashMap<>();
 
 	// 消息存储
 	//HashMap<String, ArrayList<ByteMessage>> msgs = new HashMap<>(); //msgs存储消息，为一个topic内的所有消息
