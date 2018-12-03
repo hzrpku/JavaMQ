@@ -105,7 +105,7 @@ public class DemoMessageStore {
 		try {
 			if (!inMap.containsKey(queue)) {
 				in = new FileInputStream(file);
-				bufferin = new BufferedInputStream(in,307200);
+				bufferin = new BufferedInputStream(in);
 				inMap.put(queue, bufferin);
 			}
 			//每个queue都有一个InputStream
