@@ -68,6 +68,17 @@ public class DemoTester {
                         //msg.putHeaders(MessageHeader.BORN_TIMESTAMP, "hellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohel");
                         msg.putHeaders(MessageHeader.PRIORITY, "helloworld");
                         msg.putHeaders(MessageHeader.BORN_HOST,"areyouok?");
+                        msg.putHeaders(MessageHeader.BORN_TIMESTAMP,"sssss");
+                        msg.putHeaders(MessageHeader.TRACE_ID,"sssdad");
+                        msg.putHeaders(MessageHeader.MESSAGE_ID,"sss");
+                        msg.putHeaders(MessageHeader.RELIABILITY,"sssa");
+                        msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,"asdwed");
+                        msg.putHeaders(MessageHeader.SHARDING_PARTITION,"sdsds");
+                        msg.putHeaders(MessageHeader.START_TIME,"sdsd");
+                        msg.putHeaders(MessageHeader.STOP_TIME,"saaaaa");
+                        msg.putHeaders(MessageHeader.TIMEOUT,"sdsddddd");
+                        msg.putHeaders(MessageHeader.STORE_TIMESTAMP,233333);
+                        msg.putHeaders(MessageHeader.STORE_HOST,112333);
                         //发送消息
                         producer.send(msg);
                         pushCount.incrementAndGet();
@@ -132,6 +143,10 @@ public class DemoTester {
                             System.exit(0);
                         }
                         if (!(msg.headers().getInt(MessageHeader.SHARDING_KEY)==-1286082570)) {
+                            System.out.println(String.format("header错误 topic %s 序号:%d", topic, j));
+                            System.exit(0);
+                        }
+                        if (!(msg.headers().getInt(MessageHeader.STORE_TIMESTAMP)==233333)) {
                             System.out.println(String.format("header错误 topic %s 序号:%d", topic, j));
                             System.exit(0);
                         }
