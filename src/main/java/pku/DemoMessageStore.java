@@ -11,11 +11,11 @@ public class DemoMessageStore {
 	static final DemoMessageStore store = new DemoMessageStore();
 	File file = new File("data/topic");
 	FileOutputStream out;
-	FileInputStream in;
+	FileInputStream bufferin;
 	static BufferedOutputStream bufferout;   //static
-	BufferedInputStream bufferin;
+	//BufferedInputStream bufferin;
 	//给每个consumer对应一个流
-	ConcurrentHashMap<String,BufferedInputStream> inMap = new ConcurrentHashMap<>();
+	ConcurrentHashMap<String,FileInputStream> inMap = new ConcurrentHashMap<>();
 
 	// 消息存储
 	//HashMap<String, ArrayList<ByteMessage>> msgs = new HashMap<>(); //msgs存储消息，为一个topic内的所有消息
@@ -104,8 +104,8 @@ public class DemoMessageStore {
 	public synchronized ByteMessage pull(String queue, List<String> topics) {
 		try {
 			if (!inMap.containsKey(queue)) {
-				in = new FileInputStream(file);
-				bufferin = new BufferedInputStream(in);
+				bufferin = new FileInputStream(file);
+			//	bufferin = new BufferedInputStream(in);
 				inMap.put(queue, bufferin);
 			}
 			//每个queue都有一个InputStream
