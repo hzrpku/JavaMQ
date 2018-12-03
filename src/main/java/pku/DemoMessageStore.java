@@ -327,7 +327,6 @@ public class DemoMessageStore {
 				Svalue15 = new String(value15);
 				//System.out.println(Svalue3);
 
-
 				byte topiclen = (byte)bufferin.read();//topic读取
 				byteTopic = new byte[topiclen];
 				bufferin.read(byteTopic);
