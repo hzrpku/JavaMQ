@@ -83,6 +83,7 @@ public class DemoMessageStore {
 				bufferout.write((byte)topic.getBytes().length);//存topic长度信息，为一个字节
 				bufferout.write(topic.getBytes());
 				int lenth1 = msg.getBody().length;
+				System.out.println(lenth1);
 				valuelen1 = intToByte(lenth1);
 				bufferout.write((byte)valuelen1.length);
 				bufferout.write(valuelen1);
