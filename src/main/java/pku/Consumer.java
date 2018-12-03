@@ -25,14 +25,14 @@ public class Consumer {
 
 
     //每次消费读取一个message
-    public ByteMessage poll() {
+    public synchronized ByteMessage poll() {
         ByteMessage re = null ;
 
         //先读第一个topic, 再读第二个topic...
         //直到所有topic都读完了, 返回null, 表示无消息
         //for (int i = 0; i < topics.size(); i++) {
         //    int index = (i + readPos) % topics.size();//%10
-            re = DemoMessageStore.store.pull(queue, topics);
+        re = DemoMessageStore.store.pull(queue, topics);
             //System.out.println(topics+"----");
          //   if (re != null) {
        //         readPos = index + 1;

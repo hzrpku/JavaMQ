@@ -375,16 +375,6 @@ public class DemoMessageStore {
 			msg.headers().put(Skey14,Svalue14);
 			msg.headers().put(Skey15,Svalue15);
 			msg.headers().put(MessageHeader.TOPIC,new String(byteTopic));
-		/*	System.out.println(Skey1);
-			System.out.println(Svalue1+"-----");
-			System.out.println(Skey2);
-			System.out.println(Svalue2+"-----");
-			System.out.println(Skey3);
-			System.out.println(Svalue3+"-----");
-			System.out.println(Skey4);
-			System.out.println(Svalue4+"-----");
-			System.out.println(new String(body));
-			*/
 			return msg;
 		} catch (IOException e) {
 			e.printStackTrace();
