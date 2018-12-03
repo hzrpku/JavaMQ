@@ -30,7 +30,7 @@ public class DemoTester {
     //topic数量
     static int TOPIC_COUNT = 20;
     //每个queue绑定的topic数量
-    static int ATTACH_COUNT = 2;
+    //static int ATTACH_COUNT = 2;
     //统计push/pull消息的数量
     static AtomicInteger pushCount = new AtomicInteger();
     static AtomicInteger pullCount = new AtomicInteger();
