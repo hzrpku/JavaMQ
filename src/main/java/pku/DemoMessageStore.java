@@ -91,14 +91,6 @@ public class DemoMessageStore {
 			//bufferout.flush();
 
 
-				//bufferout.write((byte)(topic.getBytes().length + msg.getBody().length + 2));//存总长度，为一个字节
-			    //bufferout.write((byte) topic.getBytes().length);//存topic长度信息，为一个字节
-			    //bufferout.write(topic.getBytes());
-			    //bufferout.write((byte) msg.getBody().length);//存body长度信息,为一个字节
-			    //bufferout.write(msg.getBody());
-
-
-
 
 		}catch (IOException e){
 			e.printStackTrace();
@@ -376,7 +368,7 @@ public class DemoMessageStore {
 			msg.putHeaders(Skey14,Svalue14);
 			msg.putHeaders(Skey15,Svalue15);
 			msg.putHeaders(MessageHeader.TOPIC,new String(byteTopic));
-			System.out.println(new String(body));
+			//System.out.println(new String(body));
 			return msg;
 		} catch (IOException e) {
 			e.printStackTrace();
