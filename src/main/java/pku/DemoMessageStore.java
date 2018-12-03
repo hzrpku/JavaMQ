@@ -369,7 +369,7 @@ public class DemoMessageStore {
 			msg.putHeaders(Skey14,Svalue14);
 			msg.putHeaders(Skey15,Svalue15);
 			msg.putHeaders(MessageHeader.TOPIC,new String(byteTopic));
-			msg.setBody(body);
+			//msg.setBody(body);
 			//System.out.println(new String(body));
 			return msg;
 		} catch (IOException e) {
