@@ -100,7 +100,7 @@ public class DemoMessageStore {
 
 
 	// 加锁保证线程安全
-	public synchronized ByteMessage pull(String queue, List<String> topics) {
+	public synchronized DefaultMessage pull(String queue, List<String> topics) {
 		try {
 			if (!inMap.containsKey(queue)) {
 				in = new FileInputStream(file);
@@ -351,7 +351,7 @@ public class DemoMessageStore {
 				//********** 第五处 **********
 			} while (!(topics.contains(new String(byteTopic))));
 
-			ByteMessage msg = new DefaultMessage(body);
+			DefaultMessage msg = new DefaultMessage(body);
 			//msg.setBody(body);
 			msg.putHeaders(Skey1,Svalue1);
 			msg.putHeaders(Skey2,Svalue2);

@@ -27,8 +27,7 @@ public class Consumer {
 
 
     //每次消费读取一个message
-    public synchronized ByteMessage poll() {
-
+    public synchronized DefaultMessage poll() {
         return DemoMessageStore.store.pull(queue, topics.get(queue));
 
     }
