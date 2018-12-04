@@ -10,7 +10,7 @@ public class Consumer {
     //List<String> topics = new ArrayList<>();
     HashMap<String,ArrayList<String>> topics = new HashMap<>();
     String queue;
-    int readpos =0;
+    //int readpos =0;
 
     //将消费者订阅的topic进行绑定
     public synchronized void attachQueue(String queueName, ArrayList<String> t) throws Exception {
