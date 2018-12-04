@@ -113,7 +113,7 @@ public class DemoTester {
         }
 
         @Override
-        public void run() {
+        public synchronized void run() {
             try {
                 //检查顺序, 保存每个topic-producer对应的序号, 新获得的序号必须严格+1
                 HashMap<String, Integer> posTable = new HashMap<>();
@@ -129,7 +129,7 @@ public class DemoTester {
                         String topic = strs[0];//topic
                         String prod = strs[1];//线程id
                         int j = Integer.parseInt(strs[2]);//j<=100
-                       // System.out.println("topic是"+topic+"  线程:"+prod+"  id为  "+Integer.toString(j));
+                        System.out.println("topic是"+topic+"  线程:"+prod+"  id为  "+Integer.toString(j));
                         String mapkey=topic+" "+prod;
                         if (!posTable.containsKey(mapkey)) {
                             posTable.put(mapkey, 0);
