@@ -13,7 +13,7 @@ public class DemoMessageStore {
 	FileOutputStream out;
 	FileInputStream in;
 	static BufferedOutputStream bufferout;   //static
-	BufferedInputStream bufferin,bufferin2;
+	BufferedInputStream bufferin;
 	//给每个consumer对应一个流
 	ConcurrentHashMap<String,BufferedInputStream> inMap = new ConcurrentHashMap<>();
 
@@ -104,8 +104,8 @@ public class DemoMessageStore {
 		try {
 			if (!inMap.containsKey(queue)) {
 				in = new FileInputStream(file);
-				bufferin2 = new BufferedInputStream(in);
-				inMap.put(queue, bufferin2);
+				bufferin = new BufferedInputStream(in);
+				inMap.put(queue, bufferin);
 			}
 			//每个queue都有一个InputStream
 			bufferin = inMap.get(queue);
