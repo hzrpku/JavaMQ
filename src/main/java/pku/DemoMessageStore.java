@@ -13,7 +13,7 @@ public class DemoMessageStore {
 	FileOutputStream out;
 	FileInputStream in;
 	static BufferedOutputStream bufferout;   //static
-	BufferedInputStream bufferin;
+	BufferedInputStream bufferin,bufferin2;
 	//给每个consumer对应一个流
 	ConcurrentHashMap<String,BufferedInputStream> inMap = new ConcurrentHashMap<>();
 
@@ -104,8 +104,8 @@ public class DemoMessageStore {
 		try {
 			if (!inMap.containsKey(queue)) {
 				in = new FileInputStream(file);
-				bufferin = new BufferedInputStream(in,307200);
-				inMap.put(queue, bufferin);
+				bufferin2 = new BufferedInputStream(in);
+				inMap.put(queue, bufferin2);
 			}
 			//每个queue都有一个InputStream
 			bufferin = inMap.get(queue);
@@ -121,11 +121,11 @@ public class DemoMessageStore {
 			String Skey1,Skey2,Skey3,Skey4,Skey5,Skey6,Skey7,Skey8,Skey9,Skey10,Skey11,Skey12,Skey13,Skey14,Skey15;
 			String Svalue1,Svalue2,Svalue3,Svalue4,Svalue5,Svalue6,Svalue7,Svalue8,Svalue9,Svalue10,Svalue11,Svalue12,Svalue13,Svalue14,Svalue15;
 			//每次循环读一个message的数据量
-
-
+			do {
 				byte key1len = (byte)bufferin.read();
-				if (key1len==-1)
+				if (key1len==-1) {
 					return null;
+				}
 				key1 = new byte[key1len];
 				bufferin.read(key1);
 				Skey1 = new String(key1);
@@ -349,6 +349,7 @@ public class DemoMessageStore {
 
 
 				//********** 第五处 **********
+			} while (!(topics.contains(new String(byteTopic))));
 
 			ByteMessage msg = new DefaultMessage(body);
 			//msg.setBody(body);
