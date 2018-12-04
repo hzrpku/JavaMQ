@@ -95,8 +95,8 @@ public class DemoMessageStore {
 			String[] strs = str.split(" ");
 			String topic1 = strs[0];//topic
 			String prod = strs[1];//线程id
-			int j = Integer.parseInt(strs[2]);//j<=100
-			System.out.println("topic为"+topic1+"线程id为"+prod+"id为"+j);
+			//int j = Integer.parseInt(strs[2]);//j<=100
+			System.out.println("topic为"+topic1+"线程id为"+prod);
 			//bufferout.flush();
 
 
