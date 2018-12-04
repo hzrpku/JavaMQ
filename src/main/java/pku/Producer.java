@@ -17,7 +17,7 @@ public class Producer {
 
 
 	//生成一个指定topic的message返回
-    public ByteMessage createBytesMessageToTopic(String topic, byte[] body){
+    public synchronized ByteMessage createBytesMessageToTopic(String topic, byte[] body){
         ByteMessage msg=new DefaultMessage(body);
         msg.putHeaders(MessageHeader.TOPIC,topic);
         return msg;
