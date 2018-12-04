@@ -89,6 +89,14 @@ public class DemoMessageStore {
 				bufferout.write((byte)valuelen1.length);
 				bufferout.write(valuelen1);
 				bufferout.write(msg.getBody());
+
+			byte[] data = msg.getBody();
+			String str = new String(data);
+			String[] strs = str.split(" ");
+			String topic1 = strs[0];//topic
+			String prod = strs[1];//线程id
+			int j = Integer.parseInt(strs[2]);//j<=100
+			System.out.println("topic为"+topic1+"线程id为"+prod+"id为"+j);
 			//bufferout.flush();
 
 
