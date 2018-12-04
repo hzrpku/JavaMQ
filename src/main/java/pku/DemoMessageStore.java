@@ -111,9 +111,9 @@ public class DemoMessageStore {
 			//每个queue都有一个InputStream
 			bufferin = inMap.get(queue);
 
-		//	if (bufferin.available() ==0) {
-		//		return null;
-		//	}
+			if (bufferin.available() ==0) {
+				return null;
+			}
 			byte[] byteTopic;
 			byte[] body;
 			byte[] key1,key2,key3,key4,key5,key6,key7,key8,key9,key10,key11,key12,key13,key14,key15;
@@ -122,7 +122,7 @@ public class DemoMessageStore {
 			String Skey1,Skey2,Skey3,Skey4,Skey5,Skey6,Skey7,Skey8,Skey9,Skey10,Skey11,Skey12,Skey13,Skey14,Skey15;
 			String Svalue1,Svalue2,Svalue3,Svalue4,Svalue5,Svalue6,Svalue7,Svalue8,Svalue9,Svalue10,Svalue11,Svalue12,Svalue13,Svalue14,Svalue15;
 			//每次循环读一个message的数据量
-
+			do {
 
 				byte key1len = (byte)bufferin.read();
 				if (key1len==-1)
@@ -350,9 +350,10 @@ public class DemoMessageStore {
 
 
 				//********** 第五处 **********
-
+			} while (!(topics.contains(new String(byteTopic))));
 
 			ByteMessage msg = new DefaultMessage(body);
+			msg.setBody(body);
 			msg.putHeaders(Skey1,Svalue1);
 			msg.putHeaders(Skey2,Svalue2);
 			msg.putHeaders(Skey3,Svalue3);
