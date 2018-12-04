@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Consumer {
     List<String> topics = new ArrayList<>();
-    String queue=null;
+    String queue;
 
     //将消费者订阅的topic进行绑定
     public synchronized void attachQueue(String queueName, Collection<String> t) throws Exception {
@@ -21,7 +21,7 @@ public class Consumer {
         }
         queue = queueName; //queue可以绑定到多个topic中
         topics.addAll(t); //所有的topic加入到topics这个list中
-        //System.out.println("I have attached"+queue);
+
     }
 
 

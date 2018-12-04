@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class DemoTester {
     //每个pusher向每个topic发送的消息数目
-    static int PUSH_COUNT =1000;
+    static int PUSH_COUNT =100;
     //发送消息的线程数
     static int PUSH_THREAD_COUNT = 4;
     //发送线程往n个topic发消息
@@ -129,7 +129,7 @@ public class DemoTester {
                         String topic = strs[0];//topic
                         String prod = strs[1];//线程id
                         int j = Integer.parseInt(strs[2]);//j<=100
-                        //System.out.println("topic是"+topic+"  线程:"+prod+"  id为  "+Integer.toString(j));
+                       // System.out.println("topic是"+topic+"  线程:"+prod+"  id为  "+Integer.toString(j));
                         String mapkey=topic+" "+prod;
                         if (!posTable.containsKey(mapkey)) {
                             posTable.put(mapkey, 0);
