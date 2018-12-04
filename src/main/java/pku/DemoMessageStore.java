@@ -67,6 +67,16 @@ public class DemoMessageStore {
 				KeyValue headers = msg.headers();
 				Set<String> keyS = headers.keySet();
 				Iterator<String> it = keyS.iterator();
+
+
+			bufferout.write((byte)topic.getBytes().length);//存topic长度信息，为一个字节
+			bufferout.write(topic.getBytes());
+			int lenth1 = msg.getBody().length;
+			//System.out.println(lenth1);
+			valuelen1 = intToByte(lenth1);
+			bufferout.write((byte)valuelen1.length);
+			bufferout.write(valuelen1);
+			bufferout.write(msg.getBody());
 				while (it.hasNext()){
 					String key = it.next();
 					if (!key.equals(MessageHeader.TOPIC)) {
@@ -81,14 +91,7 @@ public class DemoMessageStore {
 
 					}
 				}
-				bufferout.write((byte)topic.getBytes().length);//存topic长度信息，为一个字节
-				bufferout.write(topic.getBytes());
-				int lenth1 = msg.getBody().length;
-				//System.out.println(lenth1);
-				valuelen1 = intToByte(lenth1);
-				bufferout.write((byte)valuelen1.length);
-				bufferout.write(valuelen1);
-				bufferout.write(msg.getBody());
+
 			//bufferout.flush();
 
 
@@ -100,7 +103,7 @@ public class DemoMessageStore {
 
 
 	// 加锁保证线程安全
-	public synchronized DefaultMessage pull(String queue, List<String> topics) {
+	public synchronized ByteMessage pull(String queue, List<String> topics) {
 		try {
 			if (!inMap.containsKey(queue)) {
 				in = new FileInputStream(file);
@@ -122,10 +125,23 @@ public class DemoMessageStore {
 			String Svalue1,Svalue2,Svalue3,Svalue4,Svalue5,Svalue6,Svalue7,Svalue8,Svalue9,Svalue10,Svalue11,Svalue12,Svalue13,Svalue14,Svalue15;
 			//每次循环读一个message的数据量
 
-				byte key1len = (byte)bufferin.read();
-				if (key1len==-1) {
+
+				byte topiclen = (byte)bufferin.read();//topic读取
+				if (topiclen==-1) {
 					return null;
 				}
+				byteTopic = new byte[topiclen];
+				bufferin.read(byteTopic);
+
+				byte bodylen = (byte)bufferin.read();//body读取
+				len = new byte[bodylen];
+				bufferin.read(len);
+				int lenbody = Byte2Int(len);
+				body = new byte[lenbody];
+				bufferin.read(body);
+
+
+				byte key1len = (byte)bufferin.read();
 				key1 = new byte[key1len];
 				bufferin.read(key1);
 				Skey1 = new String(key1);
@@ -320,16 +336,7 @@ public class DemoMessageStore {
 				Svalue15 = new String(value15);
 				//System.out.println(Svalue3);
 
-				byte topiclen = (byte)bufferin.read();//topic读取
-				byteTopic = new byte[topiclen];
-				bufferin.read(byteTopic);
 
-				byte bodylen = (byte)bufferin.read();//body读取
-				len = new byte[bodylen];
-				bufferin.read(len);
-				int lenbody = Byte2Int(len);
-				body = new byte[lenbody];
-				bufferin.read(body);
 
 
 
@@ -351,7 +358,7 @@ public class DemoMessageStore {
 				//********** 第五处 **********
 
 
-			DefaultMessage msg = new DefaultMessage(body);
+			ByteMessage msg = new DefaultMessage(body);
 			//msg.setBody(body);
 			msg.putHeaders(Skey1,Svalue1);
 			msg.putHeaders(Skey2,Svalue2);
