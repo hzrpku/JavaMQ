@@ -92,7 +92,6 @@ public class DemoMessageStore {
 			//bufferout.flush();
 
 
-
 		}catch (IOException e){
 			e.printStackTrace();
 		}
@@ -371,7 +370,7 @@ public class DemoMessageStore {
 			msg.putHeaders(Skey15,Svalue15);
 			msg.putHeaders(MessageHeader.TOPIC,new String(byteTopic));
 			//msg.setBody(body);
-			//System.out.println(new String(body));
+			System.out.println(new String(body));
 			return msg;
 		} catch (IOException e) {
 			e.printStackTrace();
