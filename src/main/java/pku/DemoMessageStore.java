@@ -323,7 +323,7 @@ public class DemoMessageStore {
 				bufferin.read(value14);
 				Svalue14 = new String(value14);
 				//System.out.println(Svalue3);
-
+/*
 				byte key15len = (byte)bufferin.read();
 				key15 = new byte[key15len];
 				bufferin.read(key15);
@@ -336,7 +336,7 @@ public class DemoMessageStore {
 				bufferin.read(value15);
 				Svalue15 = new String(value15);
 				//System.out.println(Svalue3);
-
+*/
 
 
 
@@ -375,7 +375,7 @@ public class DemoMessageStore {
 			msg.putHeaders(Skey12,Svalue12);
 			msg.putHeaders(Skey13,Svalue13);
 			msg.putHeaders(Skey14,Svalue14);
-			msg.putHeaders(Skey15,Svalue15);
+			//msg.putHeaders(Skey15,Svalue15);
 			msg.putHeaders(MessageHeader.TOPIC,new String(byteTopic));
 			//msg.setBody(body);
 			//System.out.println(new String(body));
