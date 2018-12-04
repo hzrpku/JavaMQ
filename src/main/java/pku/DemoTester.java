@@ -67,18 +67,18 @@ public class DemoTester {
                         msg.putHeaders(MessageHeader.SHARDING_KEY, 11.0);
                         msg.putHeaders(MessageHeader.BORN_TIMESTAMP, "lohe%^&*&草是^%#$$%^&*(llohl");
                         msg.putHeaders(MessageHeader.PRIORITY, "2");
-                      //  msg.putHeaders(MessageHeader.BORN_HOST,"a3?");
+                        msg.putHeaders(MessageHeader.BORN_HOST,"a3?");
                         //msg.putHeaders(MessageHeader.BORN_TIMESTAMP,"sss");
-                       // msg.putHeaders(MessageHeader.TRACE_ID,"sssd");
-                      //  msg.putHeaders(MessageHeader.MESSAGE_ID,"ss");
-                      //  msg.putHeaders(MessageHeader.RELIABILITY,"ssa");
-                      //  msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,"wed");
-                      //  msg.putHeaders(MessageHeader.SHARDING_PARTITION,"ds");
-                      //  msg.putHeaders(MessageHeader.START_TIME,"ssd");
-                       // msg.putHeaders(MessageHeader.STOP_TIME,"saaa");
-                       // msg.putHeaders(MessageHeader.TIMEOUT,"sdsdd");
-                       // msg.putHeaders(MessageHeader.STORE_TIMESTAMP,23);
-                       // msg.putHeaders(MessageHeader.STORE_HOST,1123);
+                        msg.putHeaders(MessageHeader.TRACE_ID,"sssd");
+                        msg.putHeaders(MessageHeader.MESSAGE_ID,"ss");
+                        msg.putHeaders(MessageHeader.RELIABILITY,"ssa");
+                        msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,"wed");
+                        msg.putHeaders(MessageHeader.SHARDING_PARTITION,"ds");
+                        msg.putHeaders(MessageHeader.START_TIME,"ssd");
+                        msg.putHeaders(MessageHeader.STOP_TIME,"saaa");
+                        msg.putHeaders(MessageHeader.TIMEOUT,"sdsdd");
+                        msg.putHeaders(MessageHeader.STORE_TIMESTAMP,23);
+                        msg.putHeaders(MessageHeader.STORE_HOST,1123);
                         //发送消息
                         producer.send(msg);
                         pushCount.incrementAndGet();
@@ -147,7 +147,10 @@ public class DemoTester {
                             System.out.println(String.format("header错误 topic %s 序号:%d", topic, j));
                             System.exit(0);
                         }
-
+                        if (!(msg.headers().getInt(MessageHeader.STORE_TIMESTAMP)==23)) {
+                            System.out.println(String.format("header错误 topic %s 序号:%d", topic, j));
+                            System.exit(0);
+                        }
                         posTable.put(mapkey, posTable.get(mapkey) + 1);
                         pullCount.incrementAndGet();
                         pc++;

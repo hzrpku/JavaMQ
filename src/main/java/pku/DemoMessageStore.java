@@ -193,7 +193,7 @@ public class DemoMessageStore {
 				bufferin.read(value4);
 				Svalue4 = new String(value4);
 				//System.out.println(Svalue3);
-/*
+
 				byte key5len = (byte)bufferin.read();
 				key5 = new byte[key5len];
 				bufferin.read(key5);
@@ -336,7 +336,7 @@ public class DemoMessageStore {
 				bufferin.read(value15);
 				Svalue15 = new String(value15);
 				//System.out.println(Svalue3);
-*/
+
 
 
 
@@ -365,17 +365,17 @@ public class DemoMessageStore {
 			msg.putHeaders(Skey2,Svalue2);
 			msg.putHeaders(Skey3,Svalue3);
 			msg.putHeaders(Skey4,Svalue4);
-		//	msg.putHeaders(Skey5,Svalue5);
-		//	msg.putHeaders(Skey6,Svalue6);
-		//	msg.putHeaders(Skey7,Svalue7);
-		//	msg.putHeaders(Skey8,Svalue8);
-		//	msg.putHeaders(Skey9,Svalue9);
-			//msg.putHeaders(Skey10,Svalue10);
-			//msg.putHeaders(Skey11,Svalue11);
-		//	msg.putHeaders(Skey12,Svalue12);
-		//	msg.putHeaders(Skey13,Svalue13);
-			//msg.putHeaders(Skey14,Svalue14);
-			//msg.putHeaders(Skey15,Svalue15);
+			msg.putHeaders(Skey5,Svalue5);
+			msg.putHeaders(Skey6,Svalue6);
+			msg.putHeaders(Skey7,Svalue7);
+			msg.putHeaders(Skey8,Svalue8);
+			msg.putHeaders(Skey9,Svalue9);
+			msg.putHeaders(Skey10,Svalue10);
+			msg.putHeaders(Skey11,Svalue11);
+			msg.putHeaders(Skey12,Svalue12);
+			msg.putHeaders(Skey13,Svalue13);
+			msg.putHeaders(Skey14,Svalue14);
+			msg.putHeaders(Skey15,Svalue15);
 			msg.putHeaders(MessageHeader.TOPIC,new String(byteTopic));
 			//msg.setBody(body);
 			//System.out.println(new String(body));
