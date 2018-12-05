@@ -64,7 +64,7 @@ public class Consumer {
             String Skey1,Skey2,Skey3,Skey4,Skey5,Skey6,Skey7,Skey8,Skey9,Skey10,Skey11,Skey12,Skey13,Skey14,Skey15;
             String Svalue1,Svalue2,Svalue3,Svalue4,Svalue5,Svalue6,Svalue7,Svalue8,Svalue9,Svalue10,Svalue11,Svalue12,Svalue13,Svalue14,Svalue15;
             //每次循环读一个message的数据量
-
+            do {
                 byte topiclen = (byte)bufferin.read();//topic读取
                 if (topiclen==-1) {
                     return null;
@@ -275,7 +275,7 @@ public class Consumer {
                 Svalue15 = new String(value15);
 
                 //********** 第五处 **********
-
+            } while (!(topics.get(queue).contains(new String(byteTopic))));
             ByteMessage msg = new DefaultMessage(body);
             //msg.setBody(body);
             msg.putHeaders(Skey1,Svalue1);

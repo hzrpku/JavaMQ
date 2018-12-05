@@ -73,7 +73,7 @@ public class DemoMessageStore {
 					}
 				}
 
-			//bufferout.flush();
+			bufferout.flush();
 
 
 		}catch (IOException e){
