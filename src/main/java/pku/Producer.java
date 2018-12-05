@@ -11,9 +11,7 @@ import java.util.Set;
  * 生产者
  */
 public class Producer {
-  //  File file = new File("data");
-   // FileOutputStream out;
-   // BufferedOutputStream bufferout;
+
 
 
 	//生成一个指定topic的message返回

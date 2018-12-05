@@ -134,6 +134,10 @@ public class DemoTester {
                         if (!posTable.containsKey(mapkey)) {
                             posTable.put(mapkey, 0);
                         }
+                       // System.out.println(j);
+                       // System.out.println(posTable.get(mapkey));
+                       // System.out.println("---");
+                       // System.out.println(pc+"ssss");
                         if (j != posTable.get(mapkey)) {
                             System.out.println(String.format("数据错误 topic %s 序号:%d", topic, j));
                             System.exit(0);
@@ -215,7 +219,7 @@ public class DemoTester {
 //
     public static void main(String args[]) {
         try {
-                File file = new File("data/topic");
+                File file = new File("data/what");
                 if (file.exists()){
                     file.delete();
                 }

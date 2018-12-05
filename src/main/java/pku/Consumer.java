@@ -40,6 +40,9 @@ public class Consumer {
         //topics.addAll(t); //所有的topic加入到topics这个list中
         topics.put(queueName,t);
         queue = queueName;
+        in = new FileInputStream(file);
+        bufferin = new BufferedInputStream(in);
+        inMap.put(queue,bufferin);
 
     }
 
@@ -47,12 +50,7 @@ public class Consumer {
     //每次消费读取一个message
     public  ByteMessage poll() {
         try {
-            if (!inMap.containsKey(queue)) {
-                in = new FileInputStream(file);
-                bufferin = new BufferedInputStream(in);
-                inMap.put(queue, bufferin);
-            }
-            //每个queue都有一个InputStream
+
             bufferin = inMap.get(queue);
 
             if (bufferin.available() ==0) {
