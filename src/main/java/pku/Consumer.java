@@ -8,9 +8,9 @@ import java.util.*;
 
 public class Consumer {
     File file = new File("data/topic");
-    FileInputStream bufferin;
-    //BufferedInputStream bufferin;
-    HashMap<String,FileInputStream> inMap = new HashMap<>();
+    FileInputStream in;
+    BufferedInputStream bufferin;
+    HashMap<String,BufferedInputStream> inMap = new HashMap<>();
     //List<String> topics = new ArrayList<>();
     HashMap<String,ArrayList<String>> topics = new HashMap<>();
     String queue;
@@ -48,8 +48,8 @@ public class Consumer {
     public  ByteMessage poll() {
         try {
             if (!inMap.containsKey(queue)) {
-                //in = new FileInputStream(file);
-                bufferin = new FileInputStream(file);
+                in = new FileInputStream(file);
+                bufferin = new BufferedInputStream(in);
                 inMap.put(queue, bufferin);
             }
             //每个queue都有一个InputStream
