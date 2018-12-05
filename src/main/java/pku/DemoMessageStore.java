@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DemoMessageStore {
 	static final DemoMessageStore store = new DemoMessageStore();
-	File file = new File("data/what");
+	File file = new File("data/topic");
 	FileOutputStream out;
 	static BufferedOutputStream bufferout;
 

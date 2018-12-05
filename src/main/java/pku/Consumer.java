@@ -276,7 +276,6 @@ public class Consumer {
 
                 //********** 第五处 **********
             } while (!(topics.get(queue).contains(new String(byteTopic))));
-
             ByteMessage msg = new DefaultMessage(body);
             //msg.setBody(body);
             msg.putHeaders(Skey1,Svalue1);
