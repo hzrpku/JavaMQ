@@ -25,7 +25,7 @@ public class DemoMessageStore {
 
 		//第一次进入判断是否有data文件夹
 		if (!Is_Dir) {
-			File file = new File("data");
+			File file = new File("data/test");
 			file.mkdirs();
 			Is_Dir = true;
 		}
@@ -51,12 +51,12 @@ public class DemoMessageStore {
 		String toc = topic + Thread.currentThread().getName();
 		//System.out.println(toc);
 		if (!bufferInput.containsKey(toc)) {
-			File file = new File("data/"+topic);
+			File file = new File("data/test/"+topic);
 			if (!file.exists()){
 				return null;
 			}
 
-			FileInputStream fis = new FileInputStream("data/"+topic);
+			FileInputStream fis = new FileInputStream("data/test/"+topic);
 			BufferedInputStream bis = new BufferedInputStream(fis);
 			bufferInput.put(toc, bis);
 
@@ -170,7 +170,7 @@ public class DemoMessageStore {
 
 		for (String topic : msgs.keySet()) {
 
-			fos = new FileOutputStream("data/" + topic, true);
+			fos = new FileOutputStream("data/test/" + topic, true);
 			bos = new BufferedOutputStream(fos);
 
 
