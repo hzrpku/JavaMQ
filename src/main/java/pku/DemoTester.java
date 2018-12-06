@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class DemoTester {
     //每个pusher向每个topic发送的消息数目
-    static int PUSH_COUNT =10000;
+    static int PUSH_COUNT =100000;
     //发送消息的线程数
     static int PUSH_THREAD_COUNT = 4;
     //发送线程往n个topic发消息
@@ -30,7 +30,6 @@ public class DemoTester {
     //topic数量
     static int TOPIC_COUNT = 20;
     //每个queue绑定的topic数量
-    //static int ATTACH_COUNT = 2;
     //统计push/pull消息的数量
     static AtomicInteger pushCount = new AtomicInteger();
     static AtomicInteger pullCount = new AtomicInteger();
@@ -140,7 +139,7 @@ public class DemoTester {
                        // System.out.println(pc+"ssss");
                         if (j != posTable.get(mapkey)) {
                             System.out.println(String.format("数据错误 topic %s 序号:%d", topic, j));
-                          //  System.out.println(posTable.get(mapkey)+"   "+j);
+                            System.out.println(posTable.get(mapkey)+"   "+j);
                             System.exit(0);
                         }
 

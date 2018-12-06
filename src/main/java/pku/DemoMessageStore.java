@@ -14,10 +14,11 @@ public class DemoMessageStore {
 
 	static HashMap<String, ArrayList<ByteMessage>> msgs = new HashMap<>();
 
-	static HashMap<String, BufferedInputStream> bufferInput = new HashMap<>();
+	//static HashMap<String, BufferedInputStream> bufferInput = new HashMap<>();
+	HashMap<String, BufferedInputStream> bufferInput = new HashMap<>();
 
 	static AtomicInteger count = new AtomicInteger(0);
-
+/**************push**************/
 
 	static void push(ByteMessage msg, String topic) throws Exception {
 
@@ -36,7 +37,7 @@ public class DemoMessageStore {
 		msgs.get(topic).add(msg);
 		count.incrementAndGet();
 	}
-
+/**************pull******************/
 	 ByteMessage pull(String topic) throws IOException{
 		 byte[] byteHeaderLength;
 		 byte[] headercontent;
@@ -51,7 +52,7 @@ public class DemoMessageStore {
 				return null;
 			}
 
-			FileInputStream in = new FileInputStream(file);
+			FileInputStream in = new FileInputStream("data/"+topic);
 			BufferedInputStream bufferin = new BufferedInputStream(in);
 			bufferInput.put(toc, bufferin);
 
@@ -59,7 +60,7 @@ public class DemoMessageStore {
 		BufferedInputStream bufferin = bufferInput.get(toc);
 
 
-
+//开始读
 		byteHeaderLength = new byte[4];
 		int ret = bufferin.read(byteHeaderLength);
 		 if (ret == -1) {
@@ -75,15 +76,14 @@ public class DemoMessageStore {
 		bufferin.read(byteBodyLength);//读body
 		int intBodyLength = Byte2Int(byteBodyLength);
 
-
 		bodycontent = new byte[intBodyLength];
 		bufferin.read(bodycontent);
 
-		DefaultKeyValue keyValue = makeKeyValue(header);
-		DefaultMessage message = new DefaultMessage(bodycontent);
 
-		message.setHeaders(keyValue);
-		return message;
+		DefaultMessage msg = new DefaultMessage(bodycontent);
+		 DefaultKeyValue keyValue = makeKeyValue(header);
+		msg.setHeaders(keyValue);//设置头部
+		return msg;
 
 	}
 
