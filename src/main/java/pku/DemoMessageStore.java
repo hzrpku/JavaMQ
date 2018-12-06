@@ -21,7 +21,7 @@ public class DemoMessageStore {
 	//是否有data文件夹
 	static boolean Is_Dir = false;
 
-	public static void push(ByteMessage msg, String topic) throws Exception {
+	static void push(ByteMessage msg, String topic) throws Exception {
 
 		//第一次进入判断是否有data文件夹
 		// (!Is_Dir) {
@@ -30,7 +30,7 @@ public class DemoMessageStore {
 		//	Is_Dir = true;
 		//}
 
-		if (count.get() > 50000) {
+		if (count.get() > 400000) {
 			save();
 			msgs.clear();
 			count.set(0);
@@ -46,7 +46,7 @@ public class DemoMessageStore {
 		count.incrementAndGet();
 	}
 
-	public ByteMessage pull(String topic) throws IOException{
+	 ByteMessage pull(String topic) throws IOException{
 
 		String toc = topic + Thread.currentThread().getName();///
 		//System.out.println(toc);
