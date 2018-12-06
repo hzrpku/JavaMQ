@@ -1,12 +1,5 @@
 package pku;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.util.Iterator;
-import java.util.Set;
-
 /**
  * 生产者
  */
@@ -21,16 +14,17 @@ public class Producer {
         return msg;
     }
     //将message发送出去
-    public  void send(ByteMessage defaultMessage){
+    public  void send(ByteMessage defaultMessage)throws Exception{
         String topic = defaultMessage.headers().getString(MessageHeader.TOPIC);
-        DemoMessageStore.store.push(defaultMessage,topic);//?
-
+        synchronized (DemoMessageStore.msgs) {
+            DemoMessageStore.store.push(defaultMessage, topic);
+        }
     }
     //处理将缓存区的剩余部分
-    public void flush()throws Exception{
-      //  out = new FileOutputStream(file,true);
-       // bufferout = new BufferedOutputStream(out);///
-        DemoMessageStore.bufferout.flush();
-        //System.out.println("hzr");
+    public void flush()throws Exception {
+        synchronized (DemoMessageStore.msgs) {
+            DemoMessageStore.store.lastsave();
+            //System.out.println("hzr");
+        }
     }
 }
