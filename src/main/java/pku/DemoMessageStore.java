@@ -51,6 +51,10 @@ public class DemoMessageStore {
 		String toc = topic + Thread.currentThread().getName();
 		//System.out.println(toc);
 		if (!bufferInput.containsKey(toc)) {
+			File file = new File("data/"+topic);
+			if (!file.exists()){
+				return null;
+			}
 
 			FileInputStream fis = new FileInputStream("data/"+topic);
 			BufferedInputStream bis = new BufferedInputStream(fis);
