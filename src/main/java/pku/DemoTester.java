@@ -220,7 +220,7 @@ public class DemoTester {
 //
     public static void main(String args[]) {
         try {
-                File file = new File("data/topic/");
+                File file = new File("data");
                 if (file.exists()){
                     file.delete();
                 }
