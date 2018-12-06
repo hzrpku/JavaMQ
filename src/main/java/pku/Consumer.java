@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.zip.DataFormatException;
 
 public class Consumer {
+    DemoMessageStore store = new DemoMessageStore();
     List<String> topics = new LinkedList<>();
     String queue;
     int readpos =0;
@@ -28,7 +29,7 @@ public class Consumer {
     //每次消费读取一个message
     public ByteMessage poll()throws IOException, DataFormatException {
         ByteMessage re =null;
-        re = DemoMessageStore.store.pull(topics.get(readpos));
+        re = store.pull(topics.get(readpos));
         if (re == null) {
             readpos++;
             if (readpos < topics.size()) {

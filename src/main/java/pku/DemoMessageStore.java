@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class DemoMessageStore {
-	static DemoMessageStore store = new DemoMessageStore();
+//	static DemoMessageStore store = new DemoMessageStore();
 
 	//暂存数据集合
 	static HashMap<String, ArrayList<ByteMessage>> msgs = new HashMap<>();
@@ -21,7 +21,7 @@ public class DemoMessageStore {
 	//是否有data文件夹
 	static boolean Is_Dir = false;
 
-	public void push(ByteMessage msg, String topic) throws Exception {
+	public static void push(ByteMessage msg, String topic) throws Exception {
 
 		//第一次进入判断是否有data文件夹
 		// (!Is_Dir) {
@@ -63,15 +63,16 @@ public class DemoMessageStore {
 		}
 		BufferedInputStream bufferedInputStream = bufferInput.get(toc);
 
-		byte[] byteHeaderLength = null;
-		byte[] headerContent = null;
-		byte[] byteBodyLength = null;
-		byte[] bodyContent = null;
-		String header = null;
+		byte[] byteHeaderLength;
+		byte[] headerContent;
+		byte[] byteBodyLength;
+		byte[] bodyContent;
+		String header;
 
 		byteHeaderLength = new byte[4];
 		int ret = bufferedInputStream.read(byteHeaderLength);
-		int intHeaderLength = byteArrayToInt(byteHeaderLength);
+		//System.out.println(ret);
+		int intHeaderLength = Byte2Int(byteHeaderLength);
 
 		if (intHeaderLength == 0 || ret == -1) {
 			bufferedInputStream.close();
@@ -84,7 +85,7 @@ public class DemoMessageStore {
 
 		byteBodyLength = new byte[4];
 		bufferedInputStream.read(byteBodyLength);
-		int intBodyLength = byteArrayToInt(byteBodyLength);
+		int intBodyLength = Byte2Int(byteBodyLength);
 
 		if (intBodyLength == 0) {
 			return null;
@@ -178,9 +179,9 @@ public class DemoMessageStore {
 			for (ByteMessage message : byteMessages) {
 
 				byte[] header = header(message.headers());
-				byte[] headerLength = intToByteArray(header.length);
+				byte[] headerLength = intToByte(header.length);
 				byte[] body = message.getBody();
-				byte[] bodyLength = intToByteArray(body.length);
+				byte[] bodyLength = intToByte(body.length);
 
 				bos.write(headerLength);
 				bos.write(header);
@@ -196,12 +197,20 @@ public class DemoMessageStore {
 
 	}
 
-
+/*
 	private static int byteArrayToInt(byte[] b) {
 		return b[3] & 0xFF |
 				(b[2] & 0xFF) << 8 |
 				(b[1] & 0xFF) << 16 |
 				(b[0] & 0xFF) << 24;
+	}
+*/
+
+	public static int Byte2Int(byte[]bytes) {
+		return (bytes[0]&0xff)<<24
+				| (bytes[1]&0xff)<<16
+				| (bytes[2]&0xff)<<8
+				| (bytes[3]&0xff);
 	}
 
 
@@ -227,7 +236,7 @@ public class DemoMessageStore {
 		return result.getBytes();
 	}
 
-	private static byte[] intToByteArray(int a) throws IOException {
+	/*private static byte[] intToByteArray(int a) throws IOException {
 		byte[] b = new byte[]{
 				(byte) ((a >> 24) & 0xFF),
 				(byte) ((a >> 16) & 0xFF),
@@ -235,7 +244,20 @@ public class DemoMessageStore {
 				(byte) (a & 0xFF)
 		};
 		return b;
+	}*/
+
+
+	private synchronized static byte[]intToByte(int num){
+		byte[]bytes=new byte[4];
+		bytes[0]=(byte) ((num>>24)&0xff);
+		bytes[1]=(byte) ((num>>16)&0xff);
+		bytes[2]=(byte) ((num>>8)&0xff);
+		bytes[3]=(byte) (num&0xff);
+		return bytes;
 	}
+
+
+
 
 	//最后当push没有到达次数的时候要序列化
 	public static void lastsave() throws Exception {
