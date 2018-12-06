@@ -21,12 +21,12 @@ public class DemoMessageStore {
 /**************push**************/
 
 	static void push(ByteMessage msg, String topic) throws Exception {
+		//System.out.println(Thread.currentThread().getName());
 
 
 		if (count.get() > 50000) {
 			save();
-			msgs.clear();
-			count.set(0);
+
 		}
 
 
@@ -44,6 +44,7 @@ public class DemoMessageStore {
 		 byte[] byteBodyLength;
 		 byte[] bodycontent;
 		 String header;
+		 //System.out.println(Thread.currentThread().getName());
 
 		String toc = topic + Thread.currentThread().getName();
 		if (!bufferInput.containsKey(toc)) {
@@ -114,6 +115,7 @@ public class DemoMessageStore {
 	}
 
 	private static void save() throws Exception {
+	 	//System.out.println(Thread.currentThread().getName());
 
 		FileOutputStream fos;
 		BufferedOutputStream bos;
@@ -126,6 +128,7 @@ public class DemoMessageStore {
 
 			fos = new FileOutputStream("data/" + topic, true);
 			bos = new BufferedOutputStream(fos);
+			//System.out.println(msgs.keySet());
 
 
 			ArrayList<ByteMessage> byteMessages = msgs.get(topic);

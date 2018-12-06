@@ -22,6 +22,7 @@ public class Consumer {
         //topics.addAll(t); //所有的topic加入到topics这个list中
         topics.addAll(t);
         queue = queueName;
+        System.out.println(queue+topics);
 
     }
 
