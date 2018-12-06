@@ -48,7 +48,7 @@ public class DemoMessageStore {
 
 	public ByteMessage pull(String topic) throws IOException{
 
-		String toc = topic + Thread.currentThread().getName();
+		String toc = topic + Thread.currentThread().getName();///
 		//System.out.println(toc);
 		if (!bufferInput.containsKey(toc)) {
 			File file = new File("data/"+topic);
