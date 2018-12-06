@@ -222,7 +222,14 @@ public class DemoTester {
 //
     public static void main(String args[]) {
         try {
+            File file = new File("data");
+            if (file.exists()){
+                for (File file1 : file.listFiles()){
+                    file1.delete();
+                }
 
+            }
+                testPush();
                 testPull();
         } catch (Exception e) {
             e.printStackTrace();

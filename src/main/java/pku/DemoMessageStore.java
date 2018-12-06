@@ -10,39 +10,30 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class DemoMessageStore {
-//	static DemoMessageStore store = new DemoMessageStore();
 
-	//暂存数据集合
+
 	static HashMap<String, ArrayList<ByteMessage>> msgs = new HashMap<>();
-	//维护buffer流
+
 	static HashMap<String, BufferedInputStream> bufferInput = new HashMap<>();
-	//push的次数
+
 	static AtomicInteger count = new AtomicInteger(0);
-	//是否有data文件夹
-	static boolean Is_Dir = false;
+
 
 	static void push(ByteMessage msg, String topic) throws Exception {
 
-		//第一次进入判断是否有data文件夹
-		// (!Is_Dir) {
-		//	File file = new File("data");
-		//	file.mkdirs();
-		//	Is_Dir = true;
-		//}
 
-		if (count.get() > 400000) {
+		if (count.get() > 500000) {
 			save();
 			msgs.clear();
 			count.set(0);
 		}
 
-		//没有topic索引创建
+
 		if (!msgs.containsKey(topic)) {
 			msgs.put(topic, new ArrayList<>());
 		}
-		//加入消息
-		msgs.get(topic).add(msg);
 
+		msgs.get(topic).add(msg);
 		count.incrementAndGet();
 	}
 
@@ -197,14 +188,6 @@ public class DemoMessageStore {
 
 	}
 
-/*
-	private static int byteArrayToInt(byte[] b) {
-		return b[3] & 0xFF |
-				(b[2] & 0xFF) << 8 |
-				(b[1] & 0xFF) << 16 |
-				(b[0] & 0xFF) << 24;
-	}
-*/
 
 	public static int Byte2Int(byte[]bytes) {
 		return (bytes[0]&0xff)<<24
@@ -236,16 +219,6 @@ public class DemoMessageStore {
 		return result.getBytes();
 	}
 
-	/*private static byte[] intToByteArray(int a) throws IOException {
-		byte[] b = new byte[]{
-				(byte) ((a >> 24) & 0xFF),
-				(byte) ((a >> 16) & 0xFF),
-				(byte) ((a >> 8) & 0xFF),
-				(byte) (a & 0xFF)
-		};
-		return b;
-	}*/
-
 
 	private synchronized static byte[]intToByte(int num){
 		byte[]bytes=new byte[4];
@@ -257,9 +230,6 @@ public class DemoMessageStore {
 	}
 
 
-
-
-	//最后当push没有到达次数的时候要序列化
 	public static void lastsave() throws Exception {
 		save();
 		msgs.clear();
