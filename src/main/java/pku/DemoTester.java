@@ -217,9 +217,18 @@ public class DemoTester {
         long time3 = System.currentTimeMillis();
         System.out.println(String.format("pull 结束 time cost %d pull count %d", time3 - time2, pullCount.get()));
     }
+
+
 //
     public static void main(String args[]) {
         try {
+            File file = new File("data");
+            if (file.exists()){
+                for (File file1 : file.listFiles()){
+                    file1.delete();
+                }
+
+            }
                 testPush();
                 testPull();
         } catch (Exception e) {
