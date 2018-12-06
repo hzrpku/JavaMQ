@@ -23,7 +23,7 @@ public class DemoMessageStore {
 	static void push(ByteMessage msg, String topic) throws Exception {
 
 
-		if (count.get() > 500000) {
+		if (count.get() > 50000) {
 			save();
 			msgs.clear();
 			count.set(0);
@@ -31,7 +31,7 @@ public class DemoMessageStore {
 
 
 		if (!msgs.containsKey(topic)) {
-			msgs.put(topic, new ArrayList<>());
+			msgs.put(topic, new ArrayList<>(10000));
 		}
 
 		msgs.get(topic).add(msg);
@@ -192,7 +192,7 @@ public class DemoMessageStore {
 	}
 
 
-	public static void lastsave() throws Exception {
+	public static void clear() throws Exception {
 		save();
 		msgs.clear();
 		count.set(0);

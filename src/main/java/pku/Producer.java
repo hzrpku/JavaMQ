@@ -23,7 +23,7 @@ public class Producer {
     //处理将缓存区的剩余部分
     public void flush()throws Exception {
         synchronized (DemoMessageStore.msgs) {
-            DemoMessageStore.lastsave();
+            DemoMessageStore.clear();
             //System.out.println("hzr");
         }
     }
