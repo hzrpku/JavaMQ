@@ -128,7 +128,7 @@ public class DemoMessageStore {
 
 			fos = new FileOutputStream("data/" + topic, true);
 			bos = new BufferedOutputStream(fos);
-			System.out.println(msgs.keySet());
+			//System.out.println(msgs.keySet());
 
 
 			ArrayList<ByteMessage> byteMessages = msgs.get(topic);
