@@ -11,7 +11,7 @@ public class Producer {
     public  ByteMessage createBytesMessageToTopic(String topic, byte[] body){
         ByteMessage msg=new DefaultMessage(body);
         msg.putHeaders(MessageHeader.TOPIC,topic);
-        System.out.println(topic);
+        //System.out.println(topic);
         return msg;
     }
     //将message发送出去
