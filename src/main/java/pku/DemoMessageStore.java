@@ -24,11 +24,11 @@ public class DemoMessageStore {
 	public void push(ByteMessage msg, String topic) throws Exception {
 
 		//第一次进入判断是否有data文件夹
-		if (!Is_Dir) {
-			File file = new File("data");
-			file.mkdirs();
-			Is_Dir = true;
-		}
+		// (!Is_Dir) {
+		//	File file = new File("data");
+		//	file.mkdirs();
+		//	Is_Dir = true;
+		//}
 
 		if (count.get() > 50000) {
 			save();
