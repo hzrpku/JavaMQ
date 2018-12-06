@@ -38,7 +38,7 @@ public class DemoMessageStore {
 
 		//没有topic索引创建
 		if (!msgs.containsKey(topic)) {
-			msgs.put(topic, new ArrayList<>(10000));
+			msgs.put(topic, new ArrayList<>());
 		}
 		//加入消息
 		msgs.get(topic).add(msg);
