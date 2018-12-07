@@ -62,7 +62,7 @@ public class DemoMessageStore {
 			outtmp.write(body);
 			//outtmp.flush();
 		}
-		pushCount.incrementAndGet();
+		//pushCount.incrementAndGet();
 
 	}
 /**************pull******************/
