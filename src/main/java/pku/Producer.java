@@ -12,7 +12,6 @@ public class Producer {
     public  ByteMessage createBytesMessageToTopic(String topic, byte[] body){
         ByteMessage msg=new DefaultMessage(body);
         msg.putHeaders(MessageHeader.TOPIC,topic);
-        //System.out.println(topic);
         return msg;
     }
     //将message发送出去
@@ -26,7 +25,7 @@ public class Producer {
     public void flush()throws Exception {
         count++;
 
-        if (count==4)
+
         DemoMessageStore.store.flush();
 
     }

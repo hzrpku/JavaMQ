@@ -2,7 +2,6 @@ package pku;
 
 import java.io.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,56 +10,46 @@ import java.util.Map;
 
 public class DemoMessageStore {
 	static final DemoMessageStore store = new DemoMessageStore();
-
 	HashMap<String, DataOutputStream> files = new HashMap<>();
-	static HashMap<String, ArrayList<ByteMessage>> msgs = new HashMap<>();
-
-	//static HashMap<String, BufferedInputStream> bufferInput = new HashMap<>();
 	HashMap<String, DataInputStream> bufferInput = new HashMap<>();
-	//static AtomicInteger pushCount = new AtomicInteger();
-
-
-	//static AtomicInteger count = new AtomicInteger(0);
 
 	/**************push**************/
 	public void flush() throws IOException {
 		for (String file : files.keySet()) {
-			files.get(file).close();
+			files.get(file).flush();
 		}
 
 	}
 
 	public void push(ByteMessage msg, String topic) throws Exception {
+
 		byte[] byteheader;
 		byte[] lenofheader;
 		byte[] body;
 		byte[] lenofbody;
 
-		if (msg == null) {
-			return;
-		}
-		DataOutputStream outtmp;
+		DataOutputStream dataout;
 		synchronized (files) {
 			if (!files.containsKey(topic)) {
-				outtmp = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("data/" + topic, true)));
-				files.put(topic, outtmp);
-			} else {
-				outtmp = files.get(topic);
+				dataout = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("data/" + topic, true)));
+				files.put(topic, dataout);
 			}
+
+				dataout = files.get(topic);
+
 		}
-		synchronized (outtmp) {
+
 			byteheader = header(msg.headers());//得到header字节
 			lenofheader = intTobyte(byteheader.length);
 			body = msg.getBody();
 			lenofbody = intTobyte(body.length);
-
-			outtmp.write(lenofheader);
-			outtmp.write(byteheader);
-			outtmp.write(lenofbody);
-			outtmp.write(body);
-			//outtmp.flush();
+		synchronized (dataout) {
+			dataout.write(lenofheader);
+			dataout.write(byteheader);
+			dataout.write(lenofbody);
+			dataout.write(body);
 		}
-		//pushCount.incrementAndGet();
+
 
 	}
 
@@ -71,7 +60,6 @@ public class DemoMessageStore {
 		byte[] byteBodyLength;
 		byte[] bodycontent;
 		String header;
-		//System.out.println(Thread.currentThread().getName());
 
 		String toc = topic + Thread.currentThread().getName();
 		if (!bufferInput.containsKey(toc)) {
@@ -87,7 +75,7 @@ public class DemoMessageStore {
 
 		}
 		DataInputStream bufferin = bufferInput.get(toc);
-
+/*******************read*************************/
 
 		byteHeaderLength = new byte[4];
 		int ret = bufferin.read(byteHeaderLength);

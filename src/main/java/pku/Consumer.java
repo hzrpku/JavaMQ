@@ -18,11 +18,9 @@ public class Consumer {
             System.out.println("只能绑定一次");
             System.exit(0);
         }
-        //  queue = queueName; //queue可以绑定到多个topic中
-        //topics.addAll(t); //所有的topic加入到topics这个list中
         topics.addAll(t);
         queue = queueName;
-        //System.out.println(queue+topics);
+
 
     }
 
