@@ -228,7 +228,7 @@ public class DemoTester {
 
             }
                 testPush();
-                testPull();
+             //   testPull();
         } catch (Exception e) {
             e.printStackTrace();
         }
