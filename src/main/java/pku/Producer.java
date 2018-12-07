@@ -17,15 +17,14 @@ public class Producer {
     //将message发送出去
     public  void send(ByteMessage defaultMessage)throws Exception{
         String topic = defaultMessage.headers().getString(MessageHeader.TOPIC);
-        synchronized (DemoMessageStore.msgs) {
-            DemoMessageStore.push(defaultMessage, topic);
-        }
+
+            DemoMessageStore.store.push(defaultMessage, topic);
+
     }
     //处理将缓存区的剩余部分
     public void flush()throws Exception {
-        synchronized (DemoMessageStore.msgs) {
-            DemoMessageStore.clear();
-            //System.out.println("hzr");
-        }
+
+        DemoMessageStore.store.flush();
+
     }
 }

@@ -6,39 +6,64 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 
 
 public class DemoMessageStore {
+	static final DemoMessageStore store = new DemoMessageStore();
 
-
+    HashMap<String,DataOutputStream> files = new HashMap<>();
 	static HashMap<String, ArrayList<ByteMessage>> msgs = new HashMap<>();
 
 	//static HashMap<String, BufferedInputStream> bufferInput = new HashMap<>();
-	HashMap<String, BufferedInputStream> bufferInput = new HashMap<>();
+	HashMap<String, DataInputStream> bufferInput = new HashMap<>();
+	static AtomicInteger pushCount = new AtomicInteger();
+
 
 	static AtomicInteger count = new AtomicInteger(0);
-/**************push**************/
 
-	static void push(ByteMessage msg, String topic) throws Exception {
-		//System.out.println(Thread.currentThread().getName());
-
-
-		if (count.get() > 40000) {
-			//System.out.println("1111111");
-			save();
-			msgs.clear();
-			count.set(0);
-
+	/**************push**************/
+	public void flush() throws IOException {
+		for (String file:files.keySet()){
+			files.get(file).flush();
 		}
 
+	}
 
-		if (!msgs.containsKey(topic)) {
-			msgs.put(topic, new ArrayList<>());
+	public void push(ByteMessage msg, String topic) throws Exception {
+		byte[] byteheader;
+		byte[] lenofheader;
+		byte[] body;
+		byte[] lenofbody;
+
+		if (msg == null) {
+			return;
 		}
+		DataOutputStream outtmp;
+		synchronized (files) {
+			if (!files.containsKey(topic)) {
+				outtmp = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("data/" + topic, true)));
+				files.put(topic, outtmp);
+			} else {
+				outtmp = files.get(topic);
+			}
+		}
+		synchronized (outtmp) {
+			byteheader = header(msg.headers());//得到header字节
+			lenofheader = intTobyte(byteheader.length);
+			body = msg.getBody();
+			lenofbody = intTobyte(body.length);
 
-		msgs.get(topic).add(msg);
-		count.incrementAndGet();
+			outtmp.write(lenofheader);
+			outtmp.write(byteheader);
+			outtmp.write(lenofbody);
+			outtmp.write(body);
+			//outtmp.flush();
+		}
+		pushCount.incrementAndGet();
+
 	}
 /**************pull******************/
 	 ByteMessage pull(String topic) throws IOException{
@@ -57,38 +82,37 @@ public class DemoMessageStore {
 			}
 
 			FileInputStream in = new FileInputStream("data/"+topic);
-			BufferedInputStream bufferin = new BufferedInputStream(in);
+			BufferedInputStream bufferIn = new BufferedInputStream(in);
+			DataInputStream bufferin = new DataInputStream(bufferIn);
 			bufferInput.put(toc, bufferin);
 
 		}
-		BufferedInputStream bufferin = bufferInput.get(toc);
+		DataInputStream bufferin = bufferInput.get(toc);
 
 
-//开始读
-		byteHeaderLength = new byte[4];
-		int ret = bufferin.read(byteHeaderLength);
+		 byteHeaderLength = new byte[4];
+		 int ret = bufferin.read(byteHeaderLength);
 		 if (ret == -1) {
 			 bufferin.close();
 			 return null;
 		 }
-		int lenofheader = Byte2Int(byteHeaderLength);
-		headercontent = new byte[lenofheader];
-		bufferin.read(headercontent);
-		header = new String(headercontent);//读头部
+		 int lenofheader = Byte2Int(byteHeaderLength);
+		 headercontent = new byte[lenofheader];
+		 bufferin.read(headercontent);
+		 header = new String(headercontent);//读头部
 
-		byteBodyLength = new byte[4];
-		bufferin.read(byteBodyLength);//读body
-		int intBodyLength = Byte2Int(byteBodyLength);
+		 byteBodyLength = new byte[4];
+		 bufferin.read(byteBodyLength);//读body
+		 int intBodyLength = Byte2Int(byteBodyLength);
 
-		bodycontent = new byte[intBodyLength];
-		bufferin.read(bodycontent);
+		 bodycontent = new byte[intBodyLength];
+		 bufferin.read(bodycontent);
 
 
-		DefaultMessage msg = new DefaultMessage(bodycontent);
+		 DefaultMessage msg = new DefaultMessage(bodycontent);
 		 DefaultKeyValue keyValue = makeKeyValue(header);
-		msg.setHeaders(keyValue);//设置头部
-		return msg;
-
+		 msg.setHeaders(keyValue);//设置头部
+		 return msg;
 	}
 
 	private static DefaultKeyValue makeKeyValue(String header) {
@@ -155,6 +179,46 @@ public class DemoMessageStore {
 
 
 	}
+
+	public static byte[] msg2byte_gzip(byte[] data) {
+		byte[] b = null;
+		try {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			GZIPOutputStream gzip = new GZIPOutputStream(bos);
+			gzip.write(data);
+			//gzip.finish();
+			gzip.close();
+			b = bos.toByteArray();
+			bos.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return b;
+	}
+
+
+	public static byte[] byte2msg_gzip(byte[] data) {
+		byte[] b = null;
+		try {
+			ByteArrayInputStream bis = new ByteArrayInputStream(data);
+			GZIPInputStream gzip = new GZIPInputStream(bis);
+			byte[] buf = new byte[1024];
+			int num = -1;
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			while ((num = gzip.read(buf, 0, buf.length)) != -1) {
+				baos.write(buf, 0, num);
+			}
+			b = baos.toByteArray();
+			//baos.flush();
+			baos.close();
+			gzip.close();
+			bis.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return b;
+	}
+
 
 
 	public synchronized static int Byte2Int(byte[]bytes) {
