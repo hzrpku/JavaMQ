@@ -25,7 +25,7 @@ public class Producer {
     public void flush()throws Exception {
         count++;
 
-
+        if (count==4)
         DemoMessageStore.store.flush();
 
     }
