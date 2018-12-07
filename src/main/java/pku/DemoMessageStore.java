@@ -24,14 +24,17 @@ public class DemoMessageStore {
 		//System.out.println(Thread.currentThread().getName());
 
 
-		if (count.get() > 50000) {
+		if (count.get() > 20000) {
+			//System.out.println("1111111");
 			save();
+			msgs.clear();
+			count.set(0);
 
 		}
 
 
 		if (!msgs.containsKey(topic)) {
-			msgs.put(topic, new ArrayList<>(10000));
+			msgs.put(topic, new ArrayList<>());
 		}
 
 		msgs.get(topic).add(msg);
