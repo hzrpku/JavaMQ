@@ -24,7 +24,7 @@ public class DemoMessageStore {
 		//System.out.println(Thread.currentThread().getName());
 
 
-		if (count.get() > 20000) {
+		if (count.get() > 80000) {
 			//System.out.println("1111111");
 			save();
 			msgs.clear();
@@ -157,11 +157,20 @@ public class DemoMessageStore {
 	}
 
 
-	public static int Byte2Int(byte[]bytes) {
+	public synchronized static int Byte2Int(byte[]bytes) {
 		return (bytes[0]&0xff)<<24
 				| (bytes[1]&0xff)<<16
 				| (bytes[2]&0xff)<<8
 				| (bytes[3]&0xff);
+	}
+
+	private synchronized static byte[]intTobyte(int num){
+		byte[]bytes=new byte[4];
+		bytes[0]=(byte) ((num>>24)&0xff);
+		bytes[1]=(byte) ((num>>16)&0xff);
+		bytes[2]=(byte) ((num>>8)&0xff);
+		bytes[3]=(byte) (num&0xff);
+		return bytes;
 	}
 
 
@@ -187,15 +196,6 @@ public class DemoMessageStore {
 		return result.getBytes();
 	}
 
-
-	private synchronized static byte[]intTobyte(int num){
-		byte[]bytes=new byte[4];
-		bytes[0]=(byte) ((num>>24)&0xff);
-		bytes[1]=(byte) ((num>>16)&0xff);
-		bytes[2]=(byte) ((num>>8)&0xff);
-		bytes[3]=(byte) (num&0xff);
-		return bytes;
-	}
 
 
 	public static void clear() throws Exception {
