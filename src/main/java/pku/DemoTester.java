@@ -64,7 +64,7 @@ public class DemoTester {
                         //设置一个header
                         msg.putHeaders(MessageHeader.SEARCH_KEY, "1");
                         msg.putHeaders(MessageHeader.SHARDING_KEY, 11.0);
-                        msg.putHeaders(MessageHeader.BORN_TIMESTAMP, "lohe%^&*&草是^%#$$%^&*(llohl");
+                        msg.putHeaders(MessageHeader.BORN_TIMESTAMP, "l22");
                         msg.putHeaders(MessageHeader.PRIORITY, "2");
                         msg.putHeaders(MessageHeader.BORN_HOST,"a3?");
                         msg.putHeaders(MessageHeader.TRACE_ID,"sssd");
