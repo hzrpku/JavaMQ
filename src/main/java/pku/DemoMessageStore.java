@@ -4,8 +4,6 @@ import java.io.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.GZIPOutputStream;
-import java.util.zip.GZIPInputStream;
 
 
 
@@ -25,48 +23,31 @@ public class DemoMessageStore {
 
 	public void push(ByteMessage msg, String topic) throws Exception {
 
-		DataOutputStream outtmp;
+		byte[] byteheader;
+		byte[] lenofheader;
+		byte[] body;
+		byte[] lenofbody;
+
+		DataOutputStream dataout;
 		synchronized (files) {
 			if (!files.containsKey(topic)) {
-				outtmp = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("data/" + topic, true)));
-				files.put(topic, outtmp);
+				dataout = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("data/" + topic, true)));
+				files.put(topic, dataout);
 			}
 
-				outtmp = files.get(topic);
+				dataout = files.get(topic);
+
 		}
 
-		byte[] body = null;
-		byte headNum = (byte) msg.headers().keySet().size();
-		byte bytmp;
-		if (msg.getBody().length > 1024) {
-			body = msg2byte_gzip(msg.getBody());//压缩body
-			bytmp = 1;
-		} else {
+			byteheader = header(msg.headers());//得到header字节
+			lenofheader = intTobyte(byteheader.length);
 			body = msg.getBody();
-			bytmp = 0;
-		}
-		synchronized (outtmp) {
-			outtmp.writeByte(headNum);
-			for (String key : msg.headers().keySet()) {
-				outtmp.writeByte(MessageHeaderType.headerTypeByte.get(key));
-				switch (MessageHeaderType.headerType.get(key)) {
-					case 1:
-						outtmp.writeLong(msg.headers().getLong(key));
-						break;
-					case 2:
-						outtmp.writeDouble(msg.headers().getDouble(key));
-						break;
-					case 3:
-						outtmp.writeInt(msg.headers().getInt(key));
-						break;
-					case 4:
-						outtmp.writeUTF(msg.headers().getString(key));
-						break;
-				}
-			}
-			outtmp.writeByte(bytmp);
-			outtmp.writeShort(body.length);
-			outtmp.write(body);
+			lenofbody = intTobyte(body.length);
+		synchronized (dataout) {
+			dataout.write(lenofheader);
+			dataout.write(byteheader);
+			dataout.write(lenofbody);
+			dataout.write(body);
 		}
 
 
@@ -146,43 +127,7 @@ public class DemoMessageStore {
 		return defaultKeyValue;
 
 	}
-	public static byte[] msg2byte_gzip(byte[] data) {
-		byte[] b = null;
-		try {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			GZIPOutputStream gzip = new GZIPOutputStream(bos);
-			gzip.write(data);
-			//gzip.finish();
-			gzip.close();
-			b = bos.toByteArray();
-			bos.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return b;
-	}
-	//解压缩
-	public static byte[] byte2msg_gzip(byte[] data) {
-		byte[] b = null;
-		try {
-			ByteArrayInputStream bis = new ByteArrayInputStream(data);
-			GZIPInputStream gzip = new GZIPInputStream(bis);
-			byte[] buf = new byte[1024];
-			int num = -1;
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			while ((num = gzip.read(buf, 0, buf.length)) != -1) {
-				baos.write(buf, 0, num);
-			}
-			b = baos.toByteArray();
-			//baos.flush();
-			baos.close();
-			gzip.close();
-			bis.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return b;
-	}
+
 
 	public synchronized static int Byte2Int(byte[] bytes) {
 		return (bytes[0] & 0xff) << 24

@@ -64,11 +64,11 @@ public class DemoTester {
                         //设置一个header
                         msg.putHeaders(MessageHeader.SEARCH_KEY, "1");
                         msg.putHeaders(MessageHeader.SHARDING_KEY, 11.0);
-                        msg.putHeaders(MessageHeader.BORN_TIMESTAMP, "l22");
+                        msg.putHeaders(MessageHeader.BORN_TIMESTAMP, 12233);
                         msg.putHeaders(MessageHeader.PRIORITY, "2");
                         msg.putHeaders(MessageHeader.BORN_HOST,"a3?");
                         msg.putHeaders(MessageHeader.TRACE_ID,"sssd");
-                        msg.putHeaders(MessageHeader.MESSAGE_ID,"ss");
+                        msg.putHeaders(MessageHeader.MESSAGE_ID,123);
                         msg.putHeaders(MessageHeader.RELIABILITY,"ssa");
                         msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,"wed");
                         msg.putHeaders(MessageHeader.SHARDING_PARTITION,"ds");
@@ -228,7 +228,7 @@ public class DemoTester {
 
             }
                 testPush();
-             //   testPull();
+                testPull();
         } catch (Exception e) {
             e.printStackTrace();
         }
