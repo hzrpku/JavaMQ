@@ -62,8 +62,21 @@ public class DemoTester {
                         byte[] data = (topic +" "+id + " " + j).getBytes();
                         ByteMessage msg = producer.createBytesMessageToTopic(topics.get(i), data);
                         //设置一个header
-                        msg.putHeaders(MessageHeader.SEARCH_KEY, "hello");
-
+                        msg.putHeaders(MessageHeader.SEARCH_KEY, "1");
+                        msg.putHeaders(MessageHeader.SHARDING_KEY, 11.0);
+                        msg.putHeaders(MessageHeader.BORN_TIMESTAMP, "l22");
+                        msg.putHeaders(MessageHeader.PRIORITY, "2");
+                        msg.putHeaders(MessageHeader.BORN_HOST,"a3?");
+                        msg.putHeaders(MessageHeader.TRACE_ID,"sssd");
+                        msg.putHeaders(MessageHeader.MESSAGE_ID,"ss");
+                        msg.putHeaders(MessageHeader.RELIABILITY,"ssa");
+                        msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,"wed");
+                        msg.putHeaders(MessageHeader.SHARDING_PARTITION,"ds");
+                        msg.putHeaders(MessageHeader.START_TIME,"ssd");
+                        msg.putHeaders(MessageHeader.STOP_TIME,"saaa");
+                        msg.putHeaders(MessageHeader.TIMEOUT,"sdsdd");
+                        msg.putHeaders(MessageHeader.STORE_TIMESTAMP,"23");
+                        msg.putHeaders(MessageHeader.STORE_HOST,1123);
                         //发送消息
                         producer.send(msg);
                         pushCount.incrementAndGet();
