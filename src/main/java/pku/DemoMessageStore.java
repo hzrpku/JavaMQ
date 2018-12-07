@@ -13,14 +13,14 @@ public class DemoMessageStore {
 	HashMap<String, DataOutputStream> files = new HashMap<>();
 	HashMap<String, DataInputStream> bufferInput = new HashMap<>();
 
-	/**************push**************/
+
 	public void flush() throws IOException {
 		for (String file : files.keySet()) {
 			files.get(file).close();
 		}
 
 	}
-
+	/**************push**************/
 	public void push(ByteMessage msg, String topic) throws Exception {
 
 		byte[] byteheader;
