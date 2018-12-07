@@ -24,7 +24,7 @@ public class DemoMessageStore {
 		//System.out.println(Thread.currentThread().getName());
 
 
-		if (count.get() > 80000) {
+		if (count.get() > 40000) {
 			//System.out.println("1111111");
 			save();
 			msgs.clear();
