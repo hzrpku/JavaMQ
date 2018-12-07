@@ -5,8 +5,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
+
 
 
 
@@ -139,84 +138,6 @@ public class DemoMessageStore {
 
 		return defaultKeyValue;
 
-	}
-
-	private static void save() throws Exception {
-		//System.out.println(Thread.currentThread().getName());
-
-		FileOutputStream fos;
-		BufferedOutputStream bos;
-		byte[] byteheader;
-		byte[] lenofheader;
-		byte[] body;
-		byte[] lenofbody;
-
-		for (String topic : msgs.keySet()) {
-
-			fos = new FileOutputStream("data/" + topic, true);
-			bos = new BufferedOutputStream(fos);
-			//System.out.println(msgs.keySet());
-
-
-			ArrayList<ByteMessage> byteMessages = msgs.get(topic);
-			for (ByteMessage message : byteMessages) {
-
-				byteheader = header(message.headers());//得到header字节
-				lenofheader = intTobyte(byteheader.length);
-				body = message.getBody();
-				lenofbody = intTobyte(body.length);
-
-				bos.write(lenofheader);
-				bos.write(byteheader);
-				bos.write(lenofbody);
-				bos.write(body);
-
-			}
-			bos.flush();
-			fos.close();
-			bos.close();
-		}
-
-
-	}
-
-	public static byte[] msg2byte_gzip(byte[] data) {
-		byte[] b = null;
-		try {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			GZIPOutputStream gzip = new GZIPOutputStream(bos);
-			gzip.write(data);
-			//gzip.finish();
-			gzip.close();
-			b = bos.toByteArray();
-			bos.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return b;
-	}
-
-
-	public static byte[] byte2msg_gzip(byte[] data) {
-		byte[] b = null;
-		try {
-			ByteArrayInputStream bis = new ByteArrayInputStream(data);
-			GZIPInputStream gzip = new GZIPInputStream(bis);
-			byte[] buf = new byte[1024];
-			int num = -1;
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			while ((num = gzip.read(buf, 0, buf.length)) != -1) {
-				baos.write(buf, 0, num);
-			}
-			b = baos.toByteArray();
-			//baos.flush();
-			baos.close();
-			gzip.close();
-			bis.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return b;
 	}
 
 
