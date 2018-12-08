@@ -24,8 +24,9 @@ public class DemoMessageStore {
 	public void push(ByteMessage msg, String topic) throws Exception {
 
 		byte[] byteheader;
+		byte[] lenofheader;
 		byte[] body;
-
+		byte[] lenofbody;
 
 		DataOutputStream dataout;
 		synchronized (files) {
@@ -34,24 +35,25 @@ public class DemoMessageStore {
 				files.put(topic, dataout);
 			}
 
-				dataout = files.get(topic);
+			dataout = files.get(topic);
 
 		}
 
-			byteheader = header(msg.headers());//得到header字节
-			byte bodytype;
-			if (msg.getBody().length>2048){
-				body = msg2byte_gzip(msg.getBody());
-				bodytype=1;
-			}
-			else{
-				body=msg.getBody();
-				bodytype=0;
-			}
+		byteheader = header(msg.headers());//得到header字节
+		lenofheader = intTobyte(byteheader.length);
+		byte bodytype;
+		if (msg.getBody().length>2048){
+			body = msg2byte_gzip(msg.getBody());
+			bodytype=1;
+		}
+		else{
+			body=msg.getBody();
+			bodytype=0;
+		}
 		synchronized (dataout) {
-			dataout.writeByte(bodytype);
-			dataout.writeShort(byteheader.length);
+			dataout.write(lenofheader);
 			dataout.write(byteheader);
+			dataout.writeByte(bodytype);
 			dataout.writeShort(body.length);
 			dataout.write(body);
 		}
@@ -61,8 +63,9 @@ public class DemoMessageStore {
 
 	/**************pull******************/
 	ByteMessage pull(String topic) throws IOException {
-
+		byte[] byteheader;
 		byte[] headercontent;
+		byte[] byteBodyLength;
 		byte[] bodycontent;
 		String header;
 
@@ -82,32 +85,34 @@ public class DemoMessageStore {
 		DataInputStream bufferin = bufferInput.get(toc);
 /*******************read*************************/
 
-
-		int typebody = bufferin.read();//读body类型
-		if (typebody == -1) {
+		byteheader = new byte[4];//读头部
+		int ret = bufferin.read(byteheader);
+		if (ret == -1) {
 			bufferin.close();
 			return null;
 		}
-		short lenofheader = bufferin.readShort();//读头部
+		int lenofheader = Byte2Int(byteheader);
 		headercontent = new byte[lenofheader];
 		bufferin.read(headercontent);
 		header = new String(headercontent);
+
+		byte typebody = bufferin.readByte(); //读类型
 
 		short bodylen = bufferin.readShort();//读body
 		bodycontent = new byte[bodylen];
 		bufferin.read(bodycontent);
 
-if (typebody==1) {
-	DefaultMessage msg = new DefaultMessage(byte2msg_gzip(bodycontent));
-	DefaultKeyValue keyValue = makeKeyValue(header);
-	msg.setHeaders(keyValue);//设置头部
-	return msg;
-}else{
-	DefaultMessage msg = new DefaultMessage(bodycontent);
-	DefaultKeyValue keyValue = makeKeyValue(header);
-	msg.setHeaders(keyValue);//设置头部
-	return msg;
-}
+		if (typebody==1) {
+			DefaultMessage msg = new DefaultMessage(byte2msg_gzip(bodycontent));
+			DefaultKeyValue keyValue = makeKeyValue(header);
+			msg.setHeaders(keyValue);//设置头部
+			return msg;
+		}else{
+			DefaultMessage msg = new DefaultMessage(bodycontent);
+			DefaultKeyValue keyValue = makeKeyValue(header);
+			msg.setHeaders(keyValue);//设置头部
+			return msg;
+		}
 
 	}
 
