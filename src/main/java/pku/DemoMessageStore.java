@@ -60,7 +60,7 @@ public class DemoMessageStore {
 			dataout.writeDouble(header.getDouble("ShardingKey"));
 			dataout.writeDouble(header.getDouble("ShardingPartition"));
 
-			dataout.writeUTF(header.getString("Topic"));
+			dataout.writeUTF(topic);
 			dataout.writeUTF(header.getString("BornHost"));
 			dataout.writeUTF(header.getString("StoreHost"));
 			dataout.writeUTF(header.getString("SearchKey"));
