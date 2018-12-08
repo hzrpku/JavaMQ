@@ -40,7 +40,6 @@ public class DemoMessageStore {
 		}
 
 			byteheader = header(msg.headers());//得到header字节
-			//lenofheader = intTobyte(byteheader.length);
 			byte bodytype;
 			if (msg.getBody().length>2048){
 				body = msg2byte_gzip(msg.getBody());
@@ -53,7 +52,7 @@ public class DemoMessageStore {
 			//lenofbody = intTobyte(body.length);
 		synchronized (dataout) {
 			dataout.writeByte(bodytype);
-			dataout.writeByte(byteheader.length);
+			dataout.writeInt(byteheader.length);
 			dataout.write(byteheader);
 			dataout.writeShort(body.length);
 			dataout.write(body);
@@ -90,7 +89,7 @@ public class DemoMessageStore {
 			bufferin.close();
 			return null;
 		}
-		Byte headerlen = bufferin.readByte();
+		int headerlen = bufferin.readInt();
 		headercontent = new byte[headerlen];//读头部
 		bufferin.read(headercontent);
 		header = new String(headercontent);
