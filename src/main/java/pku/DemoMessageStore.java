@@ -50,22 +50,22 @@ public class DemoMessageStore {
 		synchronized (dataout) {
 			dataout.writeByte(bodytype);//写类型
 
-			dataout.writeInt(msg.headers().getInt(MessageHeader.MESSAGE_ID));//写头部
-			dataout.writeInt(msg.headers().getInt(MessageHeader.TIMEOUT));
-			dataout.writeInt(msg.headers().getInt(MessageHeader.PRIORITY));
-			dataout.writeInt(msg.headers().getInt(MessageHeader.RELIABILITY));
-			dataout.writeLong(msg.headers().getLong(MessageHeader.BORN_TIMESTAMP));
-			dataout.writeLong(msg.headers().getLong(MessageHeader.STORE_TIMESTAMP));
-			dataout.writeLong(msg.headers().getLong(MessageHeader.START_TIME));
-			dataout.writeLong(msg.headers().getLong(MessageHeader.STOP_TIME));
-			dataout.writeDouble(msg.headers().getDouble(MessageHeader.SHARDING_KEY));
-			dataout.writeDouble(msg.headers().getDouble(MessageHeader.SHARDING_PARTITION));
-			dataout.writeUTF(topic);
-			dataout.writeUTF(msg.headers().getString(MessageHeader.BORN_HOST));
-			dataout.writeUTF(msg.headers().getString(MessageHeader.STORE_HOST));
-			dataout.writeUTF(msg.headers().getString(MessageHeader.SEARCH_KEY));
-			dataout.writeUTF(msg.headers().getString(MessageHeader.SCHEDULE_EXPRESSION));
-			dataout.writeUTF(msg.headers().getString(MessageHeader.TRACE_ID));
+			dataout.writeInt(msg.headers().getInt("MessageId"));//写头部
+			dataout.writeInt(msg.headers().getInt("Timeout"));
+			dataout.writeInt(msg.headers().getInt("Priority"));
+			dataout.writeInt(msg.headers().getInt("Reliability"));
+			dataout.writeLong(msg.headers().getLong("BornTimestamp"));
+			dataout.writeLong(msg.headers().getLong("StoreTimestamp"));
+			dataout.writeLong(msg.headers().getLong("StartTime"));
+			dataout.writeLong(msg.headers().getLong("StopTime"));
+			dataout.writeDouble(msg.headers().getDouble("ShardingKey"));
+			dataout.writeDouble(msg.headers().getDouble("ShardingPartition"));
+			dataout.writeUTF(msg.headers().getString("Topic"));
+			dataout.writeUTF(msg.headers().getString("BornHost"));
+			dataout.writeUTF(msg.headers().getString("StoreHost"));
+			dataout.writeUTF(msg.headers().getString("SearchKey"));
+			dataout.writeUTF(msg.headers().getString("ScheduleExpression"));
+			dataout.writeUTF(msg.headers().getString("TraceId"));
 
 			dataout.writeShort(body.length);//写body
 			dataout.write(body);
