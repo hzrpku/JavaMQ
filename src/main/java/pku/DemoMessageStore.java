@@ -40,6 +40,7 @@ public class DemoMessageStore {
 		}
 
 			byteheader = header(msg.headers());//得到header字节
+			lenofheader = intTobyte(byteheader.length);
 			byte bodytype;
 			if (msg.getBody().length>2048){
 				body = msg2byte_gzip(msg.getBody());
@@ -49,11 +50,10 @@ public class DemoMessageStore {
 				body=msg.getBody();
 				bodytype=0;
 			}
-			//lenofbody = intTobyte(body.length);
 		synchronized (dataout) {
-			dataout.writeByte(bodytype);
-			dataout.writeInt(byteheader.length);
+			dataout.write(lenofheader);
 			dataout.write(byteheader);
+			dataout.writeByte(bodytype);
 			dataout.writeShort(body.length);
 			dataout.write(body);
 		}
@@ -63,7 +63,9 @@ public class DemoMessageStore {
 
 	/**************pull******************/
 	ByteMessage pull(String topic) throws IOException {
+		byte[] byteheader;
 		byte[] headercontent;
+		byte[] byteBodyLength;
 		byte[] bodycontent;
 		String header;
 
@@ -83,16 +85,18 @@ public class DemoMessageStore {
 		DataInputStream bufferin = bufferInput.get(toc);
 /*******************read*************************/
 
-
-		int typebody = bufferin.read();//读body类型
-		if (typebody == -1) {  //若到文件末尾
+		byteheader = new byte[4];//读头部
+		int ret = bufferin.read(byteheader);
+		if (ret == -1) {
 			bufferin.close();
 			return null;
 		}
-		int headerlen = bufferin.readInt();
-		headercontent = new byte[headerlen];//读头部
+		int lenofheader = Byte2Int(byteheader);
+		headercontent = new byte[lenofheader];
 		bufferin.read(headercontent);
 		header = new String(headercontent);
+
+		byte typebody = bufferin.readByte(); //读类型
 
 		short shortBodyLength = bufferin.readShort();//读body
 		bodycontent = new byte[shortBodyLength];
@@ -139,6 +143,23 @@ if (typebody==1) {
 	}
 
 
+	public synchronized static int Byte2Int(byte[] bytes) {
+		return (bytes[0] & 0xff) << 24
+				| (bytes[1] & 0xff) << 16
+				| (bytes[2] & 0xff) << 8
+				| (bytes[3] & 0xff);
+	}
+
+	private synchronized static byte[] intTobyte(int num) {
+		byte[] bytes = new byte[4];
+		bytes[0] = (byte) ((num >> 24) & 0xff);
+		bytes[1] = (byte) ((num >> 16) & 0xff);
+		bytes[2] = (byte) ((num >> 8) & 0xff);
+		bytes[3] = (byte) (num & 0xff);
+		return bytes;
+	}
+
+
 	private static byte[] header(KeyValue headers) {
 
 		Map<String, Object> map = headers.getMap();
@@ -161,12 +182,14 @@ if (typebody==1) {
 		return result.getBytes();
 	}
 
+	//压缩
 	public static byte[] msg2byte_gzip(byte[] data) {
 		byte[] b = null;
 		try {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			GZIPOutputStream gzip = new GZIPOutputStream(bos);
 			gzip.write(data);
+			//gzip.finish();
 			gzip.close();
 			b = bos.toByteArray();
 			bos.close();
@@ -175,6 +198,7 @@ if (typebody==1) {
 		}
 		return b;
 	}
+	//解压缩
 	public static byte[] byte2msg_gzip(byte[] data) {
 		byte[] b = null;
 		try {
@@ -187,6 +211,7 @@ if (typebody==1) {
 				baos.write(buf, 0, num);
 			}
 			b = baos.toByteArray();
+			//baos.flush();
 			baos.close();
 			gzip.close();
 			bis.close();

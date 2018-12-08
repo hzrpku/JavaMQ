@@ -26,7 +26,7 @@ public class Consumer {
 
 
     //每次消费读取一个message
-    public ByteMessage poll()throws IOException, DataFormatException {
+    public ByteMessage poll()throws IOException {
         ByteMessage re ;
         re = store.pull(topics.get(readpos));
         if (re == null) {
