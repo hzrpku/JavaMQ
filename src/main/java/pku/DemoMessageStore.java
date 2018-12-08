@@ -16,7 +16,7 @@ public class DemoMessageStore {
 
 	public void flush() throws IOException {
 		for (String file : files.keySet()) {
-			files.get(file).flush();
+			files.get(file).close();
 		}
 
 	}
@@ -42,7 +42,7 @@ public class DemoMessageStore {
 		byteheader = header(msg.headers());//得到header字节
 		lenofheader = intTobyte(byteheader.length);
 		byte bodytype;
-		if (msg.getBody().length>3000){
+		if (msg.getBody().length>1024){
 			body = msg2byte_gzip(msg.getBody());
 			bodytype=1;
 		}
