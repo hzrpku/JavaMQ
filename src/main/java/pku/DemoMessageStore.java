@@ -9,14 +9,14 @@ import java.util.zip.GZIPOutputStream;
 
 
 public class DemoMessageStore {
-	//final DemoMessageStore store = new DemoMessageStore();
+	static final DemoMessageStore store = new DemoMessageStore();
 	HashMap<String, DataOutputStream> files = new HashMap<>();
 	HashMap<String, DataInputStream> bufferInput = new HashMap<>();
 
 
 	public void flush() throws IOException {
 		for (String file : files.keySet()) {
-			files.get(file).close();
+			files.get(file).flush();
 		}
 
 	}
@@ -42,7 +42,7 @@ public class DemoMessageStore {
 		byteheader = header(msg.headers());//得到header字节
 		lenofheader = intTobyte(byteheader.length);
 		byte bodytype;
-		if (msg.getBody().length>2048){
+		if (msg.getBody().length>3000){
 			body = msg2byte_gzip(msg.getBody());
 			bodytype=1;
 		}

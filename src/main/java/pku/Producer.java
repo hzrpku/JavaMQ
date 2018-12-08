@@ -5,7 +5,6 @@ package pku;
  */
 public class Producer {
     static int count=0;
-    static DemoMessageStore store = new DemoMessageStore();
 
 
 
@@ -19,7 +18,7 @@ public class Producer {
     public  void send(ByteMessage defaultMessage)throws Exception{
         String topic = defaultMessage.headers().getString(MessageHeader.TOPIC);
 
-        store.push(defaultMessage, topic);
+            DemoMessageStore.store.push(defaultMessage, topic);
 
     }
     //处理将缓存区的剩余部分
@@ -27,7 +26,7 @@ public class Producer {
         count++;
 
         if (count==4)
-        store.flush();
+        DemoMessageStore.store.flush();
 
     }
 }
