@@ -24,9 +24,8 @@ public class DemoMessageStore {
 	public void push(ByteMessage msg, String topic) throws Exception {
 
 		byte[] byteheader;
-		byte[] lenofheader;
 		byte[] body;
-		byte[] lenofbody;
+
 
 		DataOutputStream dataout;
 		synchronized (files) {
@@ -40,9 +39,8 @@ public class DemoMessageStore {
 		}
 
 			byteheader = header(msg.headers());//得到header字节
-			lenofheader = intTobyte(byteheader.length);
 			byte bodytype;
-			if (msg.getBody().length>1024){
+			if (msg.getBody().length>2048){
 				body = msg2byte_gzip(msg.getBody());
 				bodytype=1;
 			}
@@ -51,9 +49,9 @@ public class DemoMessageStore {
 				bodytype=0;
 			}
 		synchronized (dataout) {
-			dataout.write(lenofheader);
-			dataout.write(byteheader);
 			dataout.writeByte(bodytype);
+			dataout.writeShort(byteheader.length);
+			dataout.write(byteheader);
 			dataout.writeShort(body.length);
 			dataout.write(body);
 		}
@@ -63,9 +61,8 @@ public class DemoMessageStore {
 
 	/**************pull******************/
 	ByteMessage pull(String topic) throws IOException {
-		byte[] byteheader;
+
 		byte[] headercontent;
-		byte[] byteBodyLength;
 		byte[] bodycontent;
 		String header;
 
@@ -85,18 +82,16 @@ public class DemoMessageStore {
 		DataInputStream bufferin = bufferInput.get(toc);
 /*******************read*************************/
 
-		byteheader = new byte[4];//读头部
-		int ret = bufferin.read(byteheader);
-		if (ret == -1) {
+
+		int typebody = bufferin.read();//读body类型
+		if (typebody == -1) {
 			bufferin.close();
 			return null;
 		}
-		int lenofheader = Byte2Int(byteheader);
+		short lenofheader = bufferin.readShort();//读头部
 		headercontent = new byte[lenofheader];
 		bufferin.read(headercontent);
 		header = new String(headercontent);
-
-		byte typebody = bufferin.readByte(); //读类型
 
 		short bodylen = bufferin.readShort();//读body
 		bodycontent = new byte[bodylen];
