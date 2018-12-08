@@ -12,8 +12,8 @@ public class DefaultMessage implements ByteMessage{ //实现一个接口
         this.headers = headers;
     }
 
-    public DefaultMessage(byte[] body) {
-        this.body = body;
+    public DefaultMessage() {
+
     }
 
     public byte[] getBody() {

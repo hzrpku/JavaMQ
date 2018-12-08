@@ -39,8 +39,7 @@ public class DemoMessageStore {
 
 		}
 
-		byteheader = header(msg.headers());//得到header字节
-		lenofheader = intTobyte(byteheader.length);
+
 		byte bodytype;
 		if (msg.getBody().length>2048){
 			body = msg2byte_gzip(msg.getBody());
@@ -51,10 +50,26 @@ public class DemoMessageStore {
 			bodytype=0;
 		}
 		synchronized (dataout) {
-			dataout.write(lenofheader);
-			dataout.write(byteheader);
-			dataout.writeByte(bodytype);
-			dataout.writeShort(body.length);
+			dataout.writeByte(bodytype);//写类型
+
+			dataout.writeInt(msg.headers().getInt(MessageHeader.MESSAGE_ID));//写头部
+			dataout.writeInt(msg.headers().getInt(MessageHeader.TIMEOUT));
+			dataout.writeInt(msg.headers().getInt(MessageHeader.PRIORITY));
+			dataout.writeInt(msg.headers().getInt(MessageHeader.RELIABILITY));
+			dataout.writeLong(msg.headers().getLong(MessageHeader.BORN_TIMESTAMP));
+			dataout.writeLong(msg.headers().getLong(MessageHeader.STORE_TIMESTAMP));
+			dataout.writeLong(msg.headers().getLong(MessageHeader.START_TIME));
+			dataout.writeLong(msg.headers().getLong(MessageHeader.STOP_TIME));
+			dataout.writeDouble(msg.headers().getDouble(MessageHeader.SHARDING_KEY));
+			dataout.writeDouble(msg.headers().getDouble(MessageHeader.SHARDING_PARTITION));
+			dataout.writeUTF(msg.headers().getString(MessageHeader.TOPIC));
+			dataout.writeUTF(msg.headers().getString(MessageHeader.BORN_HOST));
+			dataout.writeUTF(msg.headers().getString(MessageHeader.STORE_HOST));
+			dataout.writeUTF(msg.headers().getString(MessageHeader.SEARCH_KEY));
+			dataout.writeUTF(msg.headers().getString(MessageHeader.SCHEDULE_EXPRESSION));
+			dataout.writeUTF(msg.headers().getString(MessageHeader.TRACE_ID));
+
+			dataout.writeShort(body.length);//写body
 			dataout.write(body);
 		}
 
@@ -63,11 +78,7 @@ public class DemoMessageStore {
 
 	/**************pull******************/
 	ByteMessage pull(String topic) throws IOException {
-		byte[] byteheader;
-		byte[] headercontent;
-		//byte[] byteBodyLength;
 		byte[] bodycontent;
-		String header;
 
 		String toc = topic + Thread.currentThread().getName();
 		if (!bufferInput.containsKey(toc)) {
@@ -85,32 +96,39 @@ public class DemoMessageStore {
 		DataInputStream bufferin = bufferInput.get(toc);
 /*******************read*************************/
 
-		byteheader = new byte[4];//读头部
-		int read = bufferin.read(byteheader);
-		if (read == -1) {
+		int typebody = bufferin.read();//读类型
+		if (typebody == -1) {
 			bufferin.close();
 			return null;
 		}
-		int lenofheader = Byte2Int(byteheader);
-		headercontent = new byte[lenofheader];
-		bufferin.read(headercontent);
-		header = new String(headercontent);
+		DefaultMessage msg = new DefaultMessage();
 
-		byte typebody = bufferin.readByte(); //读类型
+		msg.putHeaders(MessageHeader.MESSAGE_ID,bufferin.readInt());//读头部
+		msg.putHeaders(MessageHeader.TIMEOUT,bufferin.readInt());
+		msg.putHeaders(MessageHeader.PRIORITY,bufferin.readInt());
+		msg.putHeaders(MessageHeader.RELIABILITY,bufferin.readInt());
+		msg.putHeaders(MessageHeader.BORN_TIMESTAMP,bufferin.readLong());
+		msg.putHeaders(MessageHeader.STORE_TIMESTAMP,bufferin.readLong());
+		msg.putHeaders(MessageHeader.START_TIME,bufferin.readLong());
+		msg.putHeaders(MessageHeader.STOP_TIME,bufferin.readLong());
+		msg.putHeaders(MessageHeader.SHARDING_KEY,bufferin.readDouble());
+		msg.putHeaders(MessageHeader.SHARDING_PARTITION,bufferin.readDouble());
+		msg.putHeaders(MessageHeader.TOPIC,bufferin.readUTF());
+		msg.putHeaders(MessageHeader.BORN_HOST,bufferin.readUTF());
+		msg.putHeaders(MessageHeader.STORE_HOST,bufferin.readUTF());
+		msg.putHeaders(MessageHeader.SEARCH_KEY,bufferin.readUTF());
+		msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,bufferin.readUTF());
+		msg.putHeaders(MessageHeader.TRACE_ID,bufferin.readUTF());
 
-		short bodylen = bufferin.readShort();//读body
-		bodycontent = new byte[bodylen];
+		short bodylenth = bufferin.readShort();//读body
+		bodycontent = new byte[bodylenth];
 		bufferin.read(bodycontent);
 
 		if (typebody==1) {
-			DefaultMessage msg = new DefaultMessage(byte2msg_gzip(bodycontent));
-			DefaultKeyValue keyValue = makeKeyValue(header);
-			msg.setHeaders(keyValue);//设置头部
+			msg.setBody(byte2msg_gzip(bodycontent));
 			return msg;
 		}else{
-			DefaultMessage msg = new DefaultMessage(bodycontent);
-			DefaultKeyValue keyValue = makeKeyValue(header);
-			msg.setHeaders(keyValue);//设置头部
+			msg.setBody(bodycontent);
 			return msg;
 		}
 
