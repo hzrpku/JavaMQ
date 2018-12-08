@@ -4,7 +4,7 @@ package pku;
  * 生产者
  */
 public class Producer {
-    static int count=0;
+  //  static int count=0;
 
 
 
@@ -24,9 +24,9 @@ public class Producer {
     }
     //处理将缓存区的剩余部分
     public void flush()throws Exception {
-        count++;
+       // count++;
 
-        if (count==4)
+        //if (count==4)
         DemoMessageStore.store.flush();
 
     }
