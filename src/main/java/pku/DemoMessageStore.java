@@ -21,6 +21,7 @@ public class DemoMessageStore {
 	}
 	/**************push**************/
 	public void push(ByteMessage msg, String topic) throws Exception {
+		
 		byte[] body;
 
 
@@ -63,7 +64,7 @@ public class DemoMessageStore {
 			dataout.writeUTF(msg.headers().getString(MessageHeader.STORE_HOST));
 			dataout.writeUTF(msg.headers().getString(MessageHeader.SEARCH_KEY));
 			dataout.writeUTF(msg.headers().getString(MessageHeader.SCHEDULE_EXPRESSION));
-			dataout.writeInt(msg.headers().getInt(MessageHeader.TRACE_ID));
+			dataout.writeUTF(msg.headers().getString(MessageHeader.TRACE_ID));
 
 			dataout.writeShort(body.length);//写body
 			dataout.write(body);
@@ -114,7 +115,7 @@ public class DemoMessageStore {
 		msg.putHeaders(MessageHeader.STORE_HOST,bufferin.readUTF());
 		msg.putHeaders(MessageHeader.SEARCH_KEY,bufferin.readUTF());
 		msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,bufferin.readUTF());
-		msg.putHeaders(MessageHeader.TRACE_ID,bufferin.readInt());
+		msg.putHeaders(MessageHeader.TRACE_ID,bufferin.readUTF());
 
 		short bodylenth = bufferin.readShort();//读body
 		bodycontent = new byte[bodylenth];

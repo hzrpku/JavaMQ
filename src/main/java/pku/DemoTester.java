@@ -67,7 +67,7 @@ public class DemoTester {
                         msg.putHeaders(MessageHeader.BORN_TIMESTAMP, 12233L);
                         msg.putHeaders(MessageHeader.PRIORITY, 232);
                         msg.putHeaders(MessageHeader.BORN_HOST,"a3?");
-                        msg.putHeaders(MessageHeader.TRACE_ID,34);
+                        msg.putHeaders(MessageHeader.TRACE_ID,"sssd");
                         msg.putHeaders(MessageHeader.MESSAGE_ID,123);
                         msg.putHeaders(MessageHeader.RELIABILITY,34);
                         msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,"wed");
