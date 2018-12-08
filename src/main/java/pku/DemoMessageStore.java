@@ -63,7 +63,7 @@ public class DemoMessageStore {
 			dataout.writeDouble((Double)header.get("ShardingPartition"));
 
 			dataout.writeUTF((String)header.get("Topic"));
-			dataout.writeUTF((String)header.get("BornHost"));
+			dataout.writeUTF((String)header.getOrDefault("BornHost","null"));
 			dataout.writeUTF((String)header.get("StoreHost"));
 			dataout.writeUTF((String)header.get("SearchKey"));
 			dataout.writeUTF((String)header.get("ScheduleExpression"));
@@ -79,8 +79,6 @@ public class DemoMessageStore {
 	/**************pull******************/
 	ByteMessage pull(String topic) throws IOException {
 		byte[] bodycontent;
-		byte[] topbyte;
-		byte[] borbyte;
 
 		String toc = topic + Thread.currentThread().getName();
 		if (!bufferInput.containsKey(toc)) {
@@ -142,7 +140,6 @@ public class DemoMessageStore {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			GZIPOutputStream gzip = new GZIPOutputStream(bos);
 			gzip.write(data);
-			//gzip.finish();
 			gzip.close();
 			b = bos.toByteArray();
 			bos.close();
@@ -164,7 +161,6 @@ public class DemoMessageStore {
 				baos.write(buf, 0, num);
 			}
 			b = baos.toByteArray();
-			//baos.flush();
 			baos.close();
 			gzip.close();
 			bis.close();
