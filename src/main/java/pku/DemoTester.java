@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 这个程序演示了测评程序的基本逻辑
  * 正式的测评程序会比这个更复杂
  */
+
 public class DemoTester {
     //每个pusher向每个topic发送的消息数目
     static int PUSH_COUNT =100000;
