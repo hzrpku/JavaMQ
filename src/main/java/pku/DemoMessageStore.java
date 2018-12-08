@@ -16,7 +16,7 @@ public class DemoMessageStore {
 
 	public void flush() throws IOException {
 		for (String file : files.keySet()) {
-			files.get(file).close();
+			files.get(file).flush();
 		}
 
 	}
