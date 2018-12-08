@@ -60,18 +60,13 @@ public class DemoMessageStore {
 			dataout.writeLong(msg.headers().getLong("StopTime"));
 			dataout.writeDouble(msg.headers().getDouble("ShardingKey"));
 			dataout.writeDouble(msg.headers().getDouble("ShardingPartition"));
-			dataout.writeShort(msg.headers().getString("Topic").getBytes().length);
-			dataout.write(msg.headers().getString("Topic").getBytes());
-			dataout.writeShort(msg.headers().getString("BornHost").getBytes().length);
-			dataout.write(msg.headers().getString("BornHost").getBytes());
-			dataout.writeShort(msg.headers().getString("StoreHost").getBytes().length);
-			dataout.write(msg.headers().getString("StoreHost").getBytes());
-			dataout.writeShort(msg.headers().getString("SearchKey").getBytes().length);
-			dataout.write(msg.headers().getString("SearchKey").getBytes());
-			dataout.writeShort(msg.headers().getString("ScheduleExpression").getBytes().length);
-			dataout.write(msg.headers().getString("ScheduleExpression").getBytes());
-			dataout.writeShort(msg.headers().getString("TraceId").getBytes().length);
-			dataout.write(msg.headers().getString("TraceId").getBytes());
+
+			dataout.writeUTF(msg.headers().getString("Topic"));
+			dataout.writeUTF(msg.headers().getString("BornHost"));
+			dataout.writeUTF(msg.headers().getString("StoreHost"));
+			dataout.writeUTF(msg.headers().getString("SearchKey"));
+			dataout.writeUTF(msg.headers().getString("ScheduleExpression"));
+			dataout.writeUTF(msg.headers().getString("TraceId"));
 
 			dataout.writeShort(body.length);//写body
 			dataout.write(body);
@@ -85,10 +80,6 @@ public class DemoMessageStore {
 		byte[] bodycontent;
 		byte[] topbyte;
 		byte[] borbyte;
-		byte[] stobyte;
-		byte[] seabyte;
-		byte[] schbyte;
-		byte[] trabyte;
 
 		String toc = topic + Thread.currentThread().getName();
 		if (!bufferInput.containsKey(toc)) {
@@ -123,30 +114,12 @@ public class DemoMessageStore {
 		msg.putHeaders(MessageHeader.STOP_TIME,bufferin.readLong());
 		msg.putHeaders(MessageHeader.SHARDING_KEY,bufferin.readDouble());
 		msg.putHeaders(MessageHeader.SHARDING_PARTITION,bufferin.readDouble());
-		short top = bufferin.readShort();
-		topbyte = new byte[top];
-		bufferin.read(topbyte);
-		msg.putHeaders(MessageHeader.TOPIC,new String(topbyte));
-		short bor = bufferin.readShort();
-		borbyte = new byte[bor];
-		bufferin.read(borbyte);
-		msg.putHeaders(MessageHeader.BORN_HOST,new String(borbyte));
-		short sto = bufferin.readShort();
-		stobyte = new byte[sto];
-		bufferin.read(stobyte);
-		msg.putHeaders(MessageHeader.STORE_HOST,new String(stobyte));
-		short sea = bufferin.readShort();
-		seabyte = new byte[sea];
-		bufferin.read(seabyte);
-		msg.putHeaders(MessageHeader.SEARCH_KEY,new String(seabyte));
-		short sch = bufferin.readShort();
-		schbyte = new byte[sch];
-		bufferin.read(schbyte);
-		msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,new String(schbyte));
-		short tra = bufferin.readShort();
-		trabyte = new byte[tra];
-		bufferin.read(trabyte);
-		msg.putHeaders(MessageHeader.TRACE_ID,new String(trabyte));
+		msg.putHeaders(MessageHeader.TOPIC,bufferin.readUTF());
+		msg.putHeaders(MessageHeader.BORN_HOST,bufferin.readUTF());
+		msg.putHeaders(MessageHeader.STORE_HOST,bufferin.readUTF());
+		msg.putHeaders(MessageHeader.SEARCH_KEY,bufferin.readUTF());
+		msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,bufferin.readUTF());
+		msg.putHeaders(MessageHeader.TRACE_ID,bufferin.readUTF());
 
 		short bodylenth = bufferin.readShort();//读body
 		bodycontent = new byte[bodylenth];
