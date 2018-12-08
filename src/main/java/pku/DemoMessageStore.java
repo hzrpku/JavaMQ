@@ -42,7 +42,7 @@ public class DemoMessageStore {
 			byteheader = header(msg.headers());//得到header字节
 			lenofheader = intTobyte(byteheader.length);
 			byte bodytype;
-			if (msg.getBody().length>200){
+			if (msg.getBody().length>2048){
 				body = msg2byte_gzip(msg.getBody());
 				bodytype=1;
 			}
