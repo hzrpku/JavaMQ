@@ -75,7 +75,7 @@ public class DemoTester {
                         msg.putHeaders(MessageHeader.START_TIME,"ssd");
                         msg.putHeaders(MessageHeader.STOP_TIME,"saaa");
                         msg.putHeaders(MessageHeader.TIMEOUT,"sdsdd");
-                        msg.putHeaders(MessageHeader.STORE_TIMESTAMP,"23");
+                        msg.putHeaders(MessageHeader.STORE_TIMESTAMP,23);
                         msg.putHeaders(MessageHeader.STORE_HOST,1123);
                         //发送消息
                         producer.send(msg);

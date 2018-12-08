@@ -4,8 +4,8 @@ import java.io.*;
 
 import java.util.HashMap;
 import java.util.Map;
-
-
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 
 public class DemoMessageStore {
@@ -41,11 +41,20 @@ public class DemoMessageStore {
 
 			byteheader = header(msg.headers());//得到header字节
 			lenofheader = intTobyte(byteheader.length);
-			body = msg.getBody();
+			byte bodytype;
+			if (msg.getBody().length>1024){
+				body = msg2byte_gzip(msg.getBody());
+				bodytype=1;
+			}
+			else{
+				body=msg.getBody();
+				bodytype=0;
+			}
 			lenofbody = intTobyte(body.length);
 		synchronized (dataout) {
 			dataout.write(lenofheader);
 			dataout.write(byteheader);
+			dataout.writeByte(bodytype);
 			dataout.write(lenofbody);
 			dataout.write(body);
 		}
@@ -87,19 +96,25 @@ public class DemoMessageStore {
 		headercontent = new byte[lenofheader];
 		bufferin.read(headercontent);
 		header = new String(headercontent);//读头部
-
+		byte typebody = bufferin.readByte(); //读类型
 		byteBodyLength = new byte[4];
 		bufferin.read(byteBodyLength);//读body
 		int intBodyLength = Byte2Int(byteBodyLength);
-
 		bodycontent = new byte[intBodyLength];
 		bufferin.read(bodycontent);
 
+if (typebody==1) {
+	DefaultMessage msg = new DefaultMessage(byte2msg_gzip(bodycontent));
+	DefaultKeyValue keyValue = makeKeyValue(header);
+	msg.setHeaders(keyValue);//设置头部
+	return msg;
+}else{
+	DefaultMessage msg = new DefaultMessage(bodycontent);
+	DefaultKeyValue keyValue = makeKeyValue(header);
+	msg.setHeaders(keyValue);//设置头部
+	return msg;
+}
 
-		DefaultMessage msg = new DefaultMessage(bodycontent);
-		DefaultKeyValue keyValue = makeKeyValue(header);
-		msg.setHeaders(keyValue);//设置头部
-		return msg;
 	}
 
 	private static DefaultKeyValue makeKeyValue(String header) {
@@ -166,6 +181,45 @@ public class DemoMessageStore {
 				map.get(MessageHeader.SHARDING_PARTITION) + "," +
 				map.get(MessageHeader.TRACE_ID);
 		return result.getBytes();
+	}
+
+	//压缩
+	public static byte[] msg2byte_gzip(byte[] data) {
+		byte[] b = null;
+		try {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			GZIPOutputStream gzip = new GZIPOutputStream(bos);
+			gzip.write(data);
+			//gzip.finish();
+			gzip.close();
+			b = bos.toByteArray();
+			bos.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return b;
+	}
+	//解压缩
+	public static byte[] byte2msg_gzip(byte[] data) {
+		byte[] b = null;
+		try {
+			ByteArrayInputStream bis = new ByteArrayInputStream(data);
+			GZIPInputStream gzip = new GZIPInputStream(bis);
+			byte[] buf = new byte[1024];
+			int num = -1;
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			while ((num = gzip.read(buf, 0, buf.length)) != -1) {
+				baos.write(buf, 0, num);
+			}
+			b = baos.toByteArray();
+			//baos.flush();
+			baos.close();
+			gzip.close();
+			bis.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return b;
 	}
 
 }
