@@ -53,7 +53,7 @@ public class DemoMessageStore {
 			//lenofbody = intTobyte(body.length);
 		synchronized (dataout) {
 			dataout.writeByte(bodytype);
-			dataout.writeShort(byteheader.length);
+			dataout.writeByte(byteheader.length);
 			dataout.write(byteheader);
 			dataout.writeShort(body.length);
 			dataout.write(body);
@@ -90,7 +90,7 @@ public class DemoMessageStore {
 			bufferin.close();
 			return null;
 		}
-		Short headerlen = bufferin.readShort();
+		Byte headerlen = bufferin.readByte();
 		headercontent = new byte[headerlen];//读头部
 		bufferin.read(headercontent);
 		header = new String(headercontent);
