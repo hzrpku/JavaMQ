@@ -9,14 +9,14 @@ import java.util.zip.GZIPOutputStream;
 
 
 public class DemoMessageStore {
-	static final DemoMessageStore store = new DemoMessageStore();
+	//final DemoMessageStore store = new DemoMessageStore();
 	HashMap<String, DataOutputStream> files = new HashMap<>();
 	HashMap<String, DataInputStream> bufferInput = new HashMap<>();
 
 
 	public void flush() throws IOException {
 		for (String file : files.keySet()) {
-			files.get(file).flush();
+			files.get(file).close();
 		}
 
 	}
@@ -26,7 +26,7 @@ public class DemoMessageStore {
 		byte[] byteheader;
 		byte[] lenofheader;
 		byte[] body;
-		byte[] lenofbody;
+		//byte[] lenofbody;
 
 		DataOutputStream dataout;
 		synchronized (files) {
@@ -42,7 +42,7 @@ public class DemoMessageStore {
 		byteheader = header(msg.headers());//得到header字节
 		lenofheader = intTobyte(byteheader.length);
 		byte bodytype;
-		if (msg.getBody().length>1024){
+		if (msg.getBody().length>2048){
 			body = msg2byte_gzip(msg.getBody());
 			bodytype=1;
 		}
@@ -65,7 +65,7 @@ public class DemoMessageStore {
 	ByteMessage pull(String topic) throws IOException {
 		byte[] byteheader;
 		byte[] headercontent;
-		byte[] byteBodyLength;
+		//byte[] byteBodyLength;
 		byte[] bodycontent;
 		String header;
 
@@ -86,8 +86,8 @@ public class DemoMessageStore {
 /*******************read*************************/
 
 		byteheader = new byte[4];//读头部
-		int ret = bufferin.read(byteheader);
-		if (ret == -1) {
+		int read = bufferin.read(byteheader);
+		if (read == -1) {
 			bufferin.close();
 			return null;
 		}
