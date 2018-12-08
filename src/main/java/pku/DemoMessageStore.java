@@ -3,6 +3,7 @@ package pku;
 import java.io.*;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -48,24 +49,25 @@ public class DemoMessageStore {
 		}
 		synchronized (dataout) {
 			dataout.writeByte(bodytype);//写类型
-			KeyValue header = msg.headers();
-			dataout.writeInt(header.getInt("MessageId"));//写头部
-			dataout.writeInt(header.getInt("Timeout"));
-			dataout.writeInt(header.getInt("Priority"));
-			dataout.writeInt(header.getInt("Reliability"));
-			dataout.writeLong(header.getLong("BornTimestamp"));
-			dataout.writeLong(header.getLong("StoreTimestamp"));
-			dataout.writeLong(header.getLong("StartTime"));
-			dataout.writeLong(header.getLong("StopTime"));
-			dataout.writeDouble(header.getDouble("ShardingKey"));
-			dataout.writeDouble(header.getDouble("ShardingPartition"));
+			KeyValue head = msg.headers();
+			Map<String,Object> header = head.getMap();
+			dataout.writeInt((Integer)header.get("MessageId"));//写头部
+			dataout.writeInt((Integer)header.get("Timeout"));
+			dataout.writeInt((Integer)header.get("Priority"));
+			dataout.writeInt((Integer)header.get("Reliability"));
+			dataout.writeLong((Long)header.get("BornTimestamp"));
+			dataout.writeLong((Long)header.get("StoreTimestamp"));
+			dataout.writeLong((Long)header.get("StartTime"));
+			dataout.writeLong((Long)header.get("StopTime"));
+			dataout.writeDouble((Double)header.get("ShardingKey"));
+			dataout.writeDouble((Double)header.get("ShardingPartition"));
 
-			dataout.writeUTF(topic);
-			dataout.writeUTF(header.getString("BornHost"));
-			dataout.writeUTF(header.getString("StoreHost"));
-			dataout.writeUTF(header.getString("SearchKey"));
-			dataout.writeUTF(header.getString("ScheduleExpression"));
-			dataout.writeUTF(header.getString("TraceId"));
+			dataout.writeUTF((String)header.get("Topic"));
+			dataout.writeUTF((String)header.get("BornHost"));
+			dataout.writeUTF((String)header.get("StoreHost"));
+			dataout.writeUTF((String)header.get("SearchKey"));
+			dataout.writeUTF((String)header.get("ScheduleExpression"));
+			dataout.writeUTF((String)header.get("TraceId"));
 
 			dataout.writeShort(body.length);//写body
 			dataout.write(body);
