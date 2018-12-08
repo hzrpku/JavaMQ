@@ -25,7 +25,6 @@ public class DemoMessageStore {
 
 		byte[] body;
 
-
 		DataOutputStream dataout;
 		synchronized (files) {
 			if (!files.containsKey(topic)) {
@@ -49,24 +48,24 @@ public class DemoMessageStore {
 		}
 		synchronized (dataout) {
 			dataout.writeByte(bodytype);//写类型
+			KeyValue header = msg.headers();
+			dataout.writeInt(header.getInt("MessageId"));//写头部
+			dataout.writeInt(header.getInt("Timeout"));
+			dataout.writeInt(header.getInt("Priority"));
+			dataout.writeInt(header.getInt("Reliability"));
+			dataout.writeLong(header.getLong("BornTimestamp"));
+			dataout.writeLong(header.getLong("StoreTimestamp"));
+			dataout.writeLong(header.getLong("StartTime"));
+			dataout.writeLong(header.getLong("StopTime"));
+			dataout.writeDouble(header.getDouble("ShardingKey"));
+			dataout.writeDouble(header.getDouble("ShardingPartition"));
 
-			dataout.writeInt(msg.headers().getInt("MessageId"));//写头部
-			dataout.writeInt(msg.headers().getInt("Timeout"));
-			dataout.writeInt(msg.headers().getInt("Priority"));
-			dataout.writeInt(msg.headers().getInt("Reliability"));
-			dataout.writeLong(msg.headers().getLong("BornTimestamp"));
-			dataout.writeLong(msg.headers().getLong("StoreTimestamp"));
-			dataout.writeLong(msg.headers().getLong("StartTime"));
-			dataout.writeLong(msg.headers().getLong("StopTime"));
-			dataout.writeDouble(msg.headers().getDouble("ShardingKey"));
-			dataout.writeDouble(msg.headers().getDouble("ShardingPartition"));
-
-			dataout.writeUTF(msg.headers().getString("Topic"));
-			dataout.writeUTF(msg.headers().getString("BornHost"));
-			dataout.writeUTF(msg.headers().getString("StoreHost"));
-			dataout.writeUTF(msg.headers().getString("SearchKey"));
-			dataout.writeUTF(msg.headers().getString("ScheduleExpression"));
-			dataout.writeUTF(msg.headers().getString("TraceId"));
+			dataout.writeUTF(header.getString("Topic"));
+			dataout.writeUTF(header.getString("BornHost"));
+			dataout.writeUTF(header.getString("StoreHost"));
+			dataout.writeUTF(header.getString("SearchKey"));
+			dataout.writeUTF(header.getString("ScheduleExpression"));
+			dataout.writeUTF(header.getString("TraceId"));
 
 			dataout.writeShort(body.length);//写body
 			dataout.write(body);
