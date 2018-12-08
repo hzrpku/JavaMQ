@@ -64,10 +64,10 @@ public class DemoMessageStore {
 
 			dataout.writeUTF((String)header.get("Topic"));
 			dataout.writeUTF((String)header.getOrDefault("BornHost","null"));
-			dataout.writeUTF((String)header.get("StoreHost"));
-			dataout.writeUTF((String)header.get("SearchKey"));
-			dataout.writeUTF((String)header.get("ScheduleExpression"));
-			dataout.writeUTF((String)header.get("TraceId"));
+			dataout.writeUTF((String)header.getOrDefault("StoreHost","null"));
+			dataout.writeUTF((String)header.getOrDefault("SearchKey","null"));
+			dataout.writeUTF((String)header.getOrDefault("ScheduleExpression","null"));
+			dataout.writeUTF((String)header.getOrDefault("TraceId","null"));
 
 			dataout.writeShort(body.length);//写body
 			dataout.write(body);
