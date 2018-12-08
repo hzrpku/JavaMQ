@@ -21,7 +21,8 @@ public class DemoMessageStore {
 	}
 	/**************push**************/
 	public void push(ByteMessage msg, String topic) throws Exception {
-		
+
+
 		byte[] body;
 
 
@@ -59,7 +60,7 @@ public class DemoMessageStore {
 			dataout.writeLong(msg.headers().getLong(MessageHeader.STOP_TIME));
 			dataout.writeDouble(msg.headers().getDouble(MessageHeader.SHARDING_KEY));
 			dataout.writeDouble(msg.headers().getDouble(MessageHeader.SHARDING_PARTITION));
-			dataout.writeUTF(msg.headers().getString(MessageHeader.TOPIC));
+			dataout.writeUTF(topic);
 			dataout.writeUTF(msg.headers().getString(MessageHeader.BORN_HOST));
 			dataout.writeUTF(msg.headers().getString(MessageHeader.STORE_HOST));
 			dataout.writeUTF(msg.headers().getString(MessageHeader.SEARCH_KEY));
