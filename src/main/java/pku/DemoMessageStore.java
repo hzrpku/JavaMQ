@@ -36,10 +36,9 @@ public class DemoMessageStore {
 			dataout = files.get(topic);
 
 		}
-
-
 		byte bodytype;
-		if (msg.getBody().length>1024){
+
+		if (msg.getBody().length>2560){
 			body = msg2byte_gzip(msg.getBody());
 			bodytype=1;
 		}
@@ -47,10 +46,10 @@ public class DemoMessageStore {
 			body=msg.getBody();
 			bodytype=0;
 		}
+		KeyValue head = msg.headers();
+		Map<String,Object> header = head.getMap();
 		synchronized (dataout) {
 			dataout.writeByte(bodytype);//写类型
-			KeyValue head = msg.headers();
-			Map<String,Object> header = head.getMap();
 			dataout.writeInt((Integer)header.get("MessageId"));//写头部
 			dataout.writeInt((Integer)header.get("Timeout"));
 			dataout.writeInt((Integer)header.get("Priority"));
@@ -113,6 +112,7 @@ public class DemoMessageStore {
 		msg.putHeaders(MessageHeader.STOP_TIME,bufferin.readLong());
 		msg.putHeaders(MessageHeader.SHARDING_KEY,bufferin.readDouble());
 		msg.putHeaders(MessageHeader.SHARDING_PARTITION,bufferin.readDouble());
+
 		msg.putHeaders(MessageHeader.TOPIC,bufferin.readUTF());
 		msg.putHeaders(MessageHeader.BORN_HOST,bufferin.readUTF());
 		msg.putHeaders(MessageHeader.STORE_HOST,bufferin.readUTF());
