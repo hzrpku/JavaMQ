@@ -50,12 +50,12 @@ public class DemoMessageStore {
 				body=msg.getBody();
 				bodytype=0;
 			}
-			lenofbody = intTobyte(body.length);
+			//lenofbody = intTobyte(body.length);
 		synchronized (dataout) {
 			dataout.write(lenofheader);
 			dataout.write(byteheader);
 			dataout.writeByte(bodytype);
-			dataout.write(lenofbody);
+			dataout.writeShort(body.length);
 			dataout.write(body);
 		}
 
@@ -97,10 +97,11 @@ public class DemoMessageStore {
 		bufferin.read(headercontent);
 		header = new String(headercontent);//读头部
 		byte typebody = bufferin.readByte(); //读类型
-		byteBodyLength = new byte[4];
-		bufferin.read(byteBodyLength);//读body
-		int intBodyLength = Byte2Int(byteBodyLength);
-		bodycontent = new byte[intBodyLength];
+		//byteBodyLength = new byte[4];
+		//bufferin.read(byteBodyLength);//读body
+		//int intBodyLength = Byte2Int(byteBodyLength);
+		short shortBodyLength = bufferin.readShort();
+		bodycontent = new byte[shortBodyLength];
 		bufferin.read(bodycontent);
 
 if (typebody==1) {
