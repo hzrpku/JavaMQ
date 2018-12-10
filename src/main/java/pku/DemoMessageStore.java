@@ -11,12 +11,12 @@ import java.util.zip.GZIPOutputStream;
 public class DemoMessageStore {
 	static final DemoMessageStore store = new DemoMessageStore();
 	HashMap<String, DataOutputStream> files = new HashMap<>();
-	HashMap<String, DataInputStream> bufferInput = new HashMap<>();
+	HashMap<String, DataInputStream> bufferinput = new HashMap<>();
 
 
 	public void flush() throws IOException {
 		for (String file : files.keySet()) {
-			files.get(file).flush();
+			files.get(file).close();
 		}
 
 	}
@@ -38,7 +38,7 @@ public class DemoMessageStore {
 		}
 		byte bodytype;
 
-		if (msg.getBody().length>2560){
+		if (msg.getBody().length>3072){
 			body = msg2byte_gzip(msg.getBody());
 			bodytype=1;
 		}
@@ -80,7 +80,7 @@ public class DemoMessageStore {
 		byte[] bodycontent;
 
 		String toc = topic + Thread.currentThread().getName();
-		if (!bufferInput.containsKey(toc)) {
+		if (!bufferinput.containsKey(toc)) {
 			File file = new File("data/" + topic);
 			if (!file.exists()) {
 				return null;
@@ -89,10 +89,10 @@ public class DemoMessageStore {
 			FileInputStream in = new FileInputStream("data/" + topic);
 			BufferedInputStream bufferIn = new BufferedInputStream(in);
 			DataInputStream bufferin = new DataInputStream(bufferIn);
-			bufferInput.put(toc, bufferin);
+			bufferinput.put(toc, bufferin);
 
 		}
-		DataInputStream bufferin = bufferInput.get(toc);
+		DataInputStream bufferin = bufferinput.get(toc);
 /*******************read*************************/
 
 		int typebody = bufferin.read();//读类型
