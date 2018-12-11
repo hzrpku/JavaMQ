@@ -16,7 +16,7 @@ public class DemoMessageStore {
 
 	public void flush() throws IOException {
 		for (String file : files.keySet()) {
-			files.get(file).close();
+			files.get(file).flush();
 		}
 
 	}
@@ -38,7 +38,7 @@ public class DemoMessageStore {
 		}
 		byte bodytype;
 
-		if (msg.getBody().length>1536){
+		if (msg.getBody().length>1024){
 			body = msg2byte_gzip(msg.getBody());
 			bodytype=1;
 		}
