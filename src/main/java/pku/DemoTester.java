@@ -65,7 +65,7 @@ public class DemoTester {
                         //设置一个header
                         msg.putHeaders(MessageHeader.SEARCH_KEY, "1");
                         msg.putHeaders(MessageHeader.SHARDING_KEY, 11.0);
-                        msg.putHeaders(MessageHeader.BORN_TIMESTAMP, 12233L);
+                        msg.putHeaders(MessageHeader.BORN_TIMESTAMP, 12233);
                         msg.putHeaders(MessageHeader.PRIORITY, 232);
                         msg.putHeaders(MessageHeader.BORN_HOST,"a3?");
                         msg.putHeaders(MessageHeader.TRACE_ID,"sssd");
@@ -73,10 +73,10 @@ public class DemoTester {
                         msg.putHeaders(MessageHeader.RELIABILITY,34);
                         msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,"wed");
                         msg.putHeaders(MessageHeader.SHARDING_PARTITION,233.3);
-                        msg.putHeaders(MessageHeader.START_TIME,233L);
-                        msg.putHeaders(MessageHeader.STOP_TIME,2323L);
+                        msg.putHeaders(MessageHeader.START_TIME,233);
+                        msg.putHeaders(MessageHeader.STOP_TIME,2323);
                         msg.putHeaders(MessageHeader.TIMEOUT,123);
-                        msg.putHeaders(MessageHeader.STORE_TIMESTAMP,23L);
+                        msg.putHeaders(MessageHeader.STORE_TIMESTAMP,23);
                         msg.putHeaders(MessageHeader.STORE_HOST,"34234");
                         //发送消息
                         producer.send(msg);
@@ -151,7 +151,7 @@ public class DemoTester {
                             System.out.println(String.format("header错误 topic %s 序号:%d", topic, j));
                             System.exit(0);
                         }
-                        if (!(msg.headers().getLong(MessageHeader.STORE_TIMESTAMP)==23)) {
+                        if (!(msg.headers().getInt(MessageHeader.STORE_TIMESTAMP)==23)) {
                             System.out.println(String.format("header错误 topic %s 序号:%d", topic, j));
                             System.exit(0);
                         }
