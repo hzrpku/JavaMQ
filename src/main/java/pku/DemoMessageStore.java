@@ -54,10 +54,10 @@ public class DemoMessageStore {
 			dataout.writeInt((Integer)header.get("Timeout"));
 			dataout.writeInt((Integer)header.get("Priority"));
 			dataout.writeInt((Integer)header.get("Reliability"));
-			dataout.writeLong((Long)header.get("BornTimestamp"));
-			dataout.writeLong((Long)header.get("StoreTimestamp"));
-			dataout.writeLong((Long)header.get("StartTime"));
-			dataout.writeLong((Long)header.get("StopTime"));
+			dataout.writeInt((Integer) header.get("BornTimestamp"));
+			dataout.writeInt((Integer) header.get("StoreTimestamp"));
+			dataout.writeInt((Integer) header.get("StartTime"));
+			dataout.writeInt((Integer) header.get("StopTime"));
 			dataout.writeDouble((Double)header.get("ShardingKey"));
 			dataout.writeDouble((Double)header.get("ShardingPartition"));
 
@@ -106,10 +106,10 @@ public class DemoMessageStore {
 		msg.putHeaders(MessageHeader.TIMEOUT,bufferin.readInt());
 		msg.putHeaders(MessageHeader.PRIORITY,bufferin.readInt());
 		msg.putHeaders(MessageHeader.RELIABILITY,bufferin.readInt());
-		msg.putHeaders(MessageHeader.BORN_TIMESTAMP,bufferin.readLong());
-		msg.putHeaders(MessageHeader.STORE_TIMESTAMP,bufferin.readLong());
-		msg.putHeaders(MessageHeader.START_TIME,bufferin.readLong());
-		msg.putHeaders(MessageHeader.STOP_TIME,bufferin.readLong());
+		msg.putHeaders(MessageHeader.BORN_TIMESTAMP,bufferin.readInt());
+		msg.putHeaders(MessageHeader.STORE_TIMESTAMP,bufferin.readInt());
+		msg.putHeaders(MessageHeader.START_TIME,bufferin.readInt());
+		msg.putHeaders(MessageHeader.STOP_TIME,bufferin.readInt());
 		msg.putHeaders(MessageHeader.SHARDING_KEY,bufferin.readDouble());
 		msg.putHeaders(MessageHeader.SHARDING_PARTITION,bufferin.readDouble());
 
