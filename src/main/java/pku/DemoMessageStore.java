@@ -38,7 +38,7 @@ public class DemoMessageStore {
 		}
 		byte bodytype;
 
-		if (msg.getBody().length>1024){
+		if (msg.getBody().length>2048){
 			body = msg2byte_gzip(msg.getBody());
 			bodytype=1;
 		}
