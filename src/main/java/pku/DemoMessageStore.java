@@ -48,7 +48,7 @@ public class DemoMessageStore {
 		}
 		KeyValue head = msg.headers();
 		Map<String,Object> header = head.getMap();
-		synchronized (dataout) {
+		synchronized (dataout) { //同步同一对象
 			dataout.writeByte(bodytype);//写类型
 			dataout.writeInt((Integer)header.get("MessageId"));//写头部
 			dataout.writeInt((Integer)header.get("Timeout"));
