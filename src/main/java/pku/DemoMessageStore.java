@@ -16,7 +16,7 @@ public class DemoMessageStore {
 
 	public void flush() throws IOException {
 		for (String file : files.keySet()) {
-			files.get(file).flush();
+			files.get(file).close();
 		}
 
 	}
@@ -38,7 +38,7 @@ public class DemoMessageStore {
 		}
 		byte bodytype;
 
-		if (msg.getBody().length>2048){
+		if (msg.getBody().length>1536){
 			body = msg2byte_gzip(msg.getBody());
 			bodytype=1;
 		}
@@ -97,7 +97,7 @@ public class DemoMessageStore {
 
 		int typebody = bufferin.read();//读类型
 		if (typebody == -1) {
-			bufferin.close();
+			//bufferin.close();
 			return null;
 		}
 		DefaultMessage msg = new DefaultMessage();
