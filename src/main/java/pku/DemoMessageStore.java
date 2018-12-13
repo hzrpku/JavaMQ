@@ -38,7 +38,7 @@ public class DemoMessageStore {
 		}
 		byte bodytype;
 
-		if (msg.getBody().length>15000){
+		if (msg.getBody().length>1500){
 			body = msg2byte_gzip(msg.getBody());
 			bodytype=1;
 		}
@@ -50,10 +50,10 @@ public class DemoMessageStore {
 		Map<String,Object> header = head.getMap();
 		synchronized (dataout) { //同步同一对象
 			dataout.writeByte(bodytype);//写类型
-			dataout.writeInt((Integer)header.get("MessageId"));//写头部
-			dataout.writeInt((Integer)header.get("Timeout"));
-			dataout.writeInt((Integer)header.get("Priority"));
-			dataout.writeInt((Integer)header.get("Reliability"));
+			dataout.writeShort((Short)head.getInt("MessageId"));//写头部
+			dataout.writeShort((Short)head.getInt("Timeout"));
+			dataout.writeShort((Short)head.getInt("Priority"));
+			dataout.writeShort((Short)head.getInt("Reliability"));
 			dataout.writeLong((Long)header.get("BornTimestamp"));
 			dataout.writeLong((Long)header.get("StoreTimestamp"));
 			dataout.writeLong((Long)header.get("StartTime"));
@@ -102,10 +102,10 @@ public class DemoMessageStore {
 		}
 		DefaultMessage msg = new DefaultMessage();
 
-		msg.putHeaders(MessageHeader.MESSAGE_ID,bufferin.readInt());//读头部
-		msg.putHeaders(MessageHeader.TIMEOUT,bufferin.readInt());
-		msg.putHeaders(MessageHeader.PRIORITY,bufferin.readInt());
-		msg.putHeaders(MessageHeader.RELIABILITY,bufferin.readInt());
+		msg.putHeaders(MessageHeader.MESSAGE_ID,bufferin.readShort());//读头部
+		msg.putHeaders(MessageHeader.TIMEOUT,bufferin.readShort());
+		msg.putHeaders(MessageHeader.PRIORITY,bufferin.readShort());
+		msg.putHeaders(MessageHeader.RELIABILITY,bufferin.readShort());
 		msg.putHeaders(MessageHeader.BORN_TIMESTAMP,bufferin.readLong());
 		msg.putHeaders(MessageHeader.STORE_TIMESTAMP,bufferin.readLong());
 		msg.putHeaders(MessageHeader.START_TIME,bufferin.readLong());
