@@ -63,14 +63,12 @@ public class DemoMessageStore {
 			dataout.writeLong((Long)header.get("StopTime"));
 			dataout.writeDouble((Double)header.get("ShardingKey"));
 			dataout.writeDouble((Double)header.get("ShardingPartition"));
-
-			dataout.writeUTF((String)header.get("Topic")+","+
-					(String)header.getOrDefault("BornHost","null")+","+
-					(String)header.getOrDefault("StoreHost","null")+","+
-					(String)header.getOrDefault("SearchKey","null")+","+
-					(String)header.getOrDefault("ScheduleExpression","null")+","+
-					(String)header.getOrDefault("TraceId","null")
-			);
+			dataout.writeUTF(header.get("Topic")+","+
+					header.getOrDefault("BornHost","null")+","+
+					header.getOrDefault("StoreHost","null")+","+
+					header.getOrDefault("SearchKey","null")+","+
+					header.getOrDefault("ScheduleExpression","null")+","+
+					header.getOrDefault("TraceId","null"));
 			//dataout.writeUTF((String)header.getOrDefault("BornHost","null"));
 			//dataout.writeUTF((String)header.getOrDefault("StoreHost","null"));
 			//dataout.writeUTF((String)header.getOrDefault("SearchKey","null"));
@@ -149,6 +147,7 @@ public class DemoMessageStore {
 		}
 
 	}
+
 	public static byte[] msg2byte_gzip(byte[] data) {
 		byte[] b = null;
 		try {
