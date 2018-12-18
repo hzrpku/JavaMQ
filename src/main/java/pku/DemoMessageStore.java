@@ -67,8 +67,7 @@ public class DemoMessageStore {
 					header.getOrDefault("StoreHost","null")+","+
 					header.getOrDefault("SearchKey","null")+","+
 					header.getOrDefault("ScheduleExpression","null")+","+
-					header.getOrDefault("TraceId","null")
-			);
+					header.getOrDefault("TraceId","null"));
 			dataout.writeShort(body.length);//写body
 			dataout.write(body);
 		}
