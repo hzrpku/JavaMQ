@@ -19,7 +19,7 @@ public class DemoMessageStore {
 
 	public void flush() throws IOException {
 		for (String file : files.keySet()) {
-			files.get(file).flush();
+			files.get(file).close();
 		}
 
 	}
@@ -28,7 +28,6 @@ public class DemoMessageStore {
 
 
 		byte[] body;
-
 		DataOutputStream dataout;
 		synchronized (files) {
 			if (!files.containsKey(topic)) {
@@ -69,12 +68,6 @@ public class DemoMessageStore {
 					header.getOrDefault("SearchKey","null")+","+
 					header.getOrDefault("ScheduleExpression","null")+","+
 					header.getOrDefault("TraceId","null"));
-			//dataout.writeUTF((String)header.getOrDefault("BornHost","null"));
-			//dataout.writeUTF((String)header.getOrDefault("StoreHost","null"));
-			//dataout.writeUTF((String)header.getOrDefault("SearchKey","null"));
-			//dataout.writeUTF((String)header.getOrDefault("ScheduleExpression","null"));
-			//dataout.writeUTF((String)header.getOrDefault("TraceId","null"));
-
 			dataout.writeShort(body.length);//写body
 			dataout.write(body);
 		}
@@ -120,12 +113,6 @@ public class DemoMessageStore {
 		msg.putHeaders(MessageHeader.SHARDING_KEY,bufferin.readDouble());
 		msg.putHeaders(MessageHeader.SHARDING_PARTITION,bufferin.readDouble());
 
-		//msg.putHeaders(MessageHeader.TOPIC,bufferin.readUTF());
-		//msg.putHeaders(MessageHeader.BORN_HOST,bufferin.readUTF());
-		//msg.putHeaders(MessageHeader.STORE_HOST,bufferin.readUTF());
-		//msg.putHeaders(MessageHeader.SEARCH_KEY,bufferin.readUTF());
-		//msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,bufferin.readUTF());
-		//msg.putHeaders(MessageHeader.TRACE_ID,bufferin.readUTF());
 		String[] Headers = bufferin.readUTF().split(",");
 		msg.putHeaders(MessageHeader.TOPIC,Headers[0]);
 		msg.putHeaders(MessageHeader.BORN_HOST,Headers[1]);
