@@ -42,7 +42,7 @@ public class DemoMessageStore {
 		byte bodytype;
 
 		if (msg.getBody().length>512){
-			body =zip(msg.getBody());
+			body =msg2byte_gzip(msg.getBody());
 			bodytype=1;
 		}
 		else{
@@ -64,13 +64,18 @@ public class DemoMessageStore {
 			dataout.writeDouble((Double)header.get("ShardingKey"));
 			dataout.writeDouble((Double)header.get("ShardingPartition"));
 
-			dataout.writeUTF((String)header.get("Topic"));
-			dataout.writeUTF((String)header.getOrDefault("BornHost","null"));
-			dataout.writeUTF((String)header.getOrDefault("StoreHost","null"));
-			dataout.writeUTF((String)header.getOrDefault("SearchKey","null"));
-			dataout.writeUTF((String)header.getOrDefault("ScheduleExpression","null"));
-			dataout.writeUTF((String)header.getOrDefault("TraceId","null"));
-
+			dataout.writeUTF((String)header.get("Topic")+","+
+					(String)header.getOrDefault("BornHost","null")+","+
+					(String)header.getOrDefault("StoreHost","null")+","+
+					(String)header.getOrDefault("SearchKey","null")+","+
+					(String)header.getOrDefault("ScheduleExpression","null")+","+
+					(String)header.getOrDefault("TraceId","null")
+			);
+			//dataout.writeUTF((String)header.getOrDefault("BornHost","null"));
+			//dataout.writeUTF((String)header.getOrDefault("StoreHost","null"));
+			//dataout.writeUTF((String)header.getOrDefault("SearchKey","null"));
+			//dataout.writeUTF((String)header.getOrDefault("ScheduleExpression","null"));
+			//dataout.writeUTF((String)header.getOrDefault("TraceId","null"));
 
 			dataout.writeShort(body.length);//写body
 			dataout.write(body);
@@ -117,19 +122,26 @@ public class DemoMessageStore {
 		msg.putHeaders(MessageHeader.SHARDING_KEY,bufferin.readDouble());
 		msg.putHeaders(MessageHeader.SHARDING_PARTITION,bufferin.readDouble());
 
-		msg.putHeaders(MessageHeader.TOPIC,bufferin.readUTF());
-		msg.putHeaders(MessageHeader.BORN_HOST,bufferin.readUTF());
-		msg.putHeaders(MessageHeader.STORE_HOST,bufferin.readUTF());
-		msg.putHeaders(MessageHeader.SEARCH_KEY,bufferin.readUTF());
-		msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,bufferin.readUTF());
-		msg.putHeaders(MessageHeader.TRACE_ID,bufferin.readUTF());
+		//msg.putHeaders(MessageHeader.TOPIC,bufferin.readUTF());
+		//msg.putHeaders(MessageHeader.BORN_HOST,bufferin.readUTF());
+		//msg.putHeaders(MessageHeader.STORE_HOST,bufferin.readUTF());
+		//msg.putHeaders(MessageHeader.SEARCH_KEY,bufferin.readUTF());
+		//msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,bufferin.readUTF());
+		//msg.putHeaders(MessageHeader.TRACE_ID,bufferin.readUTF());
+		String[] Headers = bufferin.readUTF().split(",");
+		msg.putHeaders(MessageHeader.TOPIC,Headers[0]);
+		msg.putHeaders(MessageHeader.BORN_HOST,Headers[1]);
+		msg.putHeaders(MessageHeader.STORE_HOST,Headers[2]);
+		msg.putHeaders(MessageHeader.SEARCH_KEY,Headers[3]);
+		msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,Headers[4]);
+		msg.putHeaders(MessageHeader.TRACE_ID,Headers[5]);
 
 		short bodylenth = bufferin.readShort();//读body
 		bodycontent = new byte[bodylenth];
 		bufferin.read(bodycontent);
 
 		if (typebody==1) {
-			msg.setBody(unZip(bodycontent));
+			msg.setBody(byte2msg_gzip(bodycontent));
 			return msg;
 		}else{
 			msg.setBody(bodycontent);
@@ -137,7 +149,42 @@ public class DemoMessageStore {
 		}
 
 	}
+	public static byte[] msg2byte_gzip(byte[] data) {
+		byte[] b = null;
+		try {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			GZIPOutputStream gzip = new GZIPOutputStream(bos);
+			gzip.write(data);
+			gzip.close();
+			b = bos.toByteArray();
+			bos.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return b;
+	}
 
+	public static byte[] byte2msg_gzip(byte[] data) {
+		byte[] b = null;
+		try {
+			ByteArrayInputStream bis = new ByteArrayInputStream(data);
+			GZIPInputStream gzip = new GZIPInputStream(bis);
+			byte[] buf = new byte[1024];
+			int num = -1;
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			while ((num = gzip.read(buf, 0, buf.length)) != -1) {
+				baos.write(buf, 0, num);
+			}
+			b = baos.toByteArray();
+			baos.close();
+			gzip.close();
+			bis.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return b;
+	}
+/*
 	public static byte[] zip(byte[] data) {
 		byte[] b = null;
 		try {
@@ -180,5 +227,6 @@ public class DemoMessageStore {
 		}
 		return b;
 	}
+	*/
 
 }
