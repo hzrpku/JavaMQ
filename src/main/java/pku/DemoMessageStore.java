@@ -68,7 +68,12 @@ public class DemoMessageStore {
 					header.getOrDefault("SearchKey","null")+","+
 					header.getOrDefault("ScheduleExpression","null")+","+
 					header.getOrDefault("TraceId","null"));
-			dataout.writeShort(body.length);//写body
+			if (bodytype==1) {
+				dataout.writeShort(body.length);//写body
+			}
+			else {
+				dataout.writeByte(body.length);
+			}
 			dataout.write(body);
 		}
 
@@ -78,6 +83,7 @@ public class DemoMessageStore {
 	/**************pull******************/
 	ByteMessage pull(String topic) throws IOException {
 		byte[] bodycontent;
+		short bodylenth;
 
 		String toc = topic + Thread.currentThread().getName();
 		if (!bufferinput.containsKey(toc)) {
@@ -120,8 +126,12 @@ public class DemoMessageStore {
 		msg.putHeaders(MessageHeader.SEARCH_KEY,Headers[3]);
 		msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,Headers[4]);
 		msg.putHeaders(MessageHeader.TRACE_ID,Headers[5]);
-
-		short bodylenth = bufferin.readShort();//读body
+		if (typebody==1) {
+			bodylenth = bufferin.readShort();//读body
+		}
+		else {
+			bodylenth = bufferin.readByte();
+		}
 		bodycontent = new byte[bodylenth];
 		bufferin.read(bodycontent);
 
