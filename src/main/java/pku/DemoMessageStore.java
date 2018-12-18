@@ -84,6 +84,7 @@ public class DemoMessageStore {
 	ByteMessage pull(String topic) throws IOException {
 		byte[] bodycontent;
 		short bodylenth;
+		DataInputStream datain;
 
 		String toc = topic + Thread.currentThread().getName();
 		if (!bufferinput.containsKey(toc)) {
@@ -94,32 +95,31 @@ public class DemoMessageStore {
 
 			FileInputStream in = new FileInputStream("data/" + topic);
 			BufferedInputStream bufferIn = new BufferedInputStream(in);
-			DataInputStream bufferin = new DataInputStream(bufferIn);
-			bufferinput.put(toc, bufferin);
+			datain = new DataInputStream(bufferIn);
+			bufferinput.put(toc, datain);
 
 		}
-		DataInputStream bufferin = bufferinput.get(toc);
+		datain = bufferinput.get(toc);
 /*******************read*************************/
 
-		int typebody = bufferin.read();//读类型
+		int typebody = datain.read();//读类型
 		if (typebody == -1) {
-			bufferin.close();
 			return null;
 		}
 		DefaultMessage msg = new DefaultMessage();
 
-		msg.putHeaders(MessageHeader.MESSAGE_ID,bufferin.readInt());//读头部
-		msg.putHeaders(MessageHeader.TIMEOUT,bufferin.readInt());
-		msg.putHeaders(MessageHeader.PRIORITY,bufferin.readInt());
-		msg.putHeaders(MessageHeader.RELIABILITY,bufferin.readInt());
-		msg.putHeaders(MessageHeader.BORN_TIMESTAMP,bufferin.readLong());
-		msg.putHeaders(MessageHeader.STORE_TIMESTAMP,bufferin.readLong());
-		msg.putHeaders(MessageHeader.START_TIME,bufferin.readLong());
-		msg.putHeaders(MessageHeader.STOP_TIME,bufferin.readLong());
-		msg.putHeaders(MessageHeader.SHARDING_KEY,bufferin.readDouble());
-		msg.putHeaders(MessageHeader.SHARDING_PARTITION,bufferin.readDouble());
+		msg.putHeaders(MessageHeader.MESSAGE_ID,datain.readInt());//读头部
+		msg.putHeaders(MessageHeader.TIMEOUT,datain.readInt());
+		msg.putHeaders(MessageHeader.PRIORITY,datain.readInt());
+		msg.putHeaders(MessageHeader.RELIABILITY,datain.readInt());
+		msg.putHeaders(MessageHeader.BORN_TIMESTAMP,datain.readLong());
+		msg.putHeaders(MessageHeader.STORE_TIMESTAMP,datain.readLong());
+		msg.putHeaders(MessageHeader.START_TIME,datain.readLong());
+		msg.putHeaders(MessageHeader.STOP_TIME,datain.readLong());
+		msg.putHeaders(MessageHeader.SHARDING_KEY,datain.readDouble());
+		msg.putHeaders(MessageHeader.SHARDING_PARTITION,datain.readDouble());
 
-		String[] Headers = bufferin.readUTF().split(",");
+		String[] Headers = datain.readUTF().split(",");
 		msg.putHeaders(MessageHeader.TOPIC,Headers[0]);
 		msg.putHeaders(MessageHeader.BORN_HOST,Headers[1]);
 		msg.putHeaders(MessageHeader.STORE_HOST,Headers[2]);
@@ -127,13 +127,13 @@ public class DemoMessageStore {
 		msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,Headers[4]);
 		msg.putHeaders(MessageHeader.TRACE_ID,Headers[5]);
 		if (typebody==1) {
-			bodylenth = bufferin.readShort();//读body
+			bodylenth = datain.readShort();//读body
 		}
 		else {
-			bodylenth = bufferin.readByte();
+			bodylenth = datain.readByte();
 		}
 		bodycontent = new byte[bodylenth];
-		bufferin.read(bodycontent);
+		datain.read(bodycontent);
 
 		if (typebody==1) {
 			msg.setBody(byte2msg_gzip(bodycontent));
