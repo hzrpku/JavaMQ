@@ -21,7 +21,7 @@ public interface KeyValue {
 
     public KeyValue put(String key, String value);
 
-    public short getInt(String key);
+    public int getInt(String key);
 
     public long getLong(String key);
 
