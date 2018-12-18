@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipOutputStream;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipEntry;
 
 
 public class DemoMessageStore {
@@ -39,7 +42,7 @@ public class DemoMessageStore {
 		byte bodytype;
 
 		if (msg.getBody().length>512){
-			body = msg2byte_gzip(msg.getBody());
+			body =zip(msg.getBody());
 			bodytype=1;
 		}
 		else{
@@ -68,15 +71,9 @@ public class DemoMessageStore {
 			dataout.writeUTF((String)header.getOrDefault("ScheduleExpression","null"));
 			dataout.writeUTF((String)header.getOrDefault("TraceId","null"));
 
-            if (bodytype==1) {
-				dataout.writeShort(body.length);//写body
-			}
-			else {
-				dataout.writeByte(body.length);
-			}
 
+			dataout.writeShort(body.length);//写body
 			dataout.write(body);
-
 		}
 
 
@@ -126,31 +123,32 @@ public class DemoMessageStore {
 		msg.putHeaders(MessageHeader.SEARCH_KEY,bufferin.readUTF());
 		msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,bufferin.readUTF());
 		msg.putHeaders(MessageHeader.TRACE_ID,bufferin.readUTF());
-		if (typebody==1) {
 
-			short bodylenth = bufferin.readShort();//读body
-			bodycontent = new byte[bodylenth];
-			bufferin.read(bodycontent);
-			msg.setBody(byte2msg_gzip(bodycontent));
+		short bodylenth = bufferin.readShort();//读body
+		bodycontent = new byte[bodylenth];
+		bufferin.read(bodycontent);
+
+		if (typebody==1) {
+			msg.setBody(unZip(bodycontent));
 			return msg;
-		}
-		else{
-			byte bodylenth = bufferin.readByte();
-			bodycontent = new byte[bodylenth];
-			bufferin.read(bodycontent);
+		}else{
 			msg.setBody(bodycontent);
 			return msg;
 		}
 
 	}
 
-	public static byte[] msg2byte_gzip(byte[] data) {
+	public static byte[] zip(byte[] data) {
 		byte[] b = null;
 		try {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			GZIPOutputStream gzip = new GZIPOutputStream(bos);
-			gzip.write(data);
-			gzip.close();
+			ZipOutputStream zip = new ZipOutputStream(bos);
+			ZipEntry entry = new ZipEntry("zip");
+			entry.setSize(data.length);
+			zip.putNextEntry(entry);
+			zip.write(data);
+			zip.closeEntry();
+			zip.close();
 			b = bos.toByteArray();
 			bos.close();
 		} catch (Exception ex) {
@@ -159,20 +157,23 @@ public class DemoMessageStore {
 		return b;
 	}
 
-	public static byte[] byte2msg_gzip(byte[] data) {
+	public static byte[] unZip(byte[] data) {
 		byte[] b = null;
 		try {
 			ByteArrayInputStream bis = new ByteArrayInputStream(data);
-			GZIPInputStream gzip = new GZIPInputStream(bis);
-			byte[] buf = new byte[1024];
-			int num = -1;
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			while ((num = gzip.read(buf, 0, buf.length)) != -1) {
-				baos.write(buf, 0, num);
+			ZipInputStream zip = new ZipInputStream(bis);
+			while (zip.getNextEntry() != null) {
+				byte[] buf = new byte[1024];
+				int num = -1;
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				while ((num = zip.read(buf, 0, buf.length)) != -1) {
+					baos.write(buf, 0, num);
+				}
+				b = baos.toByteArray();
+				baos.flush();
+				baos.close();
 			}
-			b = baos.toByteArray();
-			baos.close();
-			gzip.close();
+			zip.close();
 			bis.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
