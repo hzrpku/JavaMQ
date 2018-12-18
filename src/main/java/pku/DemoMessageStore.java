@@ -4,11 +4,11 @@ import java.io.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-//import java.util.zip.ZipOutputStream;
-//import java.util.zip.ZipInputStream;
-//import java.util.zip.ZipEntry;
+//import java.util.zip.GZIPInputStream;
+//import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipOutputStream;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipEntry;
 
 
 public class DemoMessageStore {
@@ -40,8 +40,8 @@ public class DemoMessageStore {
 		}
 		byte bodytype;
 
-		if (msg.getBody().length>512){
-			body =msg2byte_gzip(msg.getBody());
+		if (msg.getBody().length>1024){
+			body =zip(msg.getBody());
 			bodytype=1;
 		}
 		else{
@@ -136,7 +136,7 @@ public class DemoMessageStore {
 		datain.read(bodycontent);
 
 		if (typebody==1) {
-			msg.setBody(byte2msg_gzip(bodycontent));
+			msg.setBody(unZip(bodycontent));
 			return msg;
 		}else{
 			msg.setBody(bodycontent);
@@ -144,7 +144,7 @@ public class DemoMessageStore {
 		}
 
 	}
-
+/*
 	public static byte[] msg2byte_gzip(byte[] data) {
 		byte[] b = null;
 		try {
@@ -180,7 +180,8 @@ public class DemoMessageStore {
 		}
 		return b;
 	}
-/*
+	*/
+
 	public static byte[] zip(byte[] data) {
 		byte[] b = null;
 		try {
@@ -223,6 +224,6 @@ public class DemoMessageStore {
 		}
 		return b;
 	}
-	*/
+
 
 }
