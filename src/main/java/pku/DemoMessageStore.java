@@ -38,7 +38,7 @@ public class DemoMessageStore {
 		}
 		byte bodytype;
 
-		if (msg.getBody().length>100){
+		if (msg.getBody().length>512){
 			body = msg2byte_gzip(msg.getBody());
 			bodytype=1;
 		}
@@ -67,6 +67,7 @@ public class DemoMessageStore {
 			dataout.writeUTF((String)header.getOrDefault("SearchKey","null"));
 			dataout.writeUTF((String)header.getOrDefault("ScheduleExpression","null"));
 			dataout.writeUTF((String)header.getOrDefault("TraceId","null"));
+
 
 			dataout.writeShort(body.length);//写body
 			dataout.write(body);
