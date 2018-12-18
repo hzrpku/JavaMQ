@@ -40,7 +40,7 @@ public class DemoMessageStore {
 		}
 		byte bodytype;
 
-		if (msg.getBody().length>1024){
+		if (msg.getBody().length>512){
 			body =msg2byte_gzip(msg.getBody());
 			bodytype=1;
 		}
@@ -84,7 +84,7 @@ public class DemoMessageStore {
 	ByteMessage pull(String topic) throws IOException {
 		byte[] bodycontent;
 		short bodylenth;
-		DataInputStream datain;
+		//DataInputStream datain;
 
 		String toc = topic + Thread.currentThread().getName();
 		if (!bufferinput.containsKey(toc)) {
@@ -95,11 +95,11 @@ public class DemoMessageStore {
 
 			FileInputStream in = new FileInputStream("data/" + topic);
 			BufferedInputStream bufferIn = new BufferedInputStream(in);
-			datain = new DataInputStream(bufferIn);
+			DataInputStream datain = new DataInputStream(bufferIn);
 			bufferinput.put(toc, datain);
 
 		}
-		datain = bufferinput.get(toc);
+		DataInputStream datain = bufferinput.get(toc);
 /*******************read*************************/
 
 		int typebody = datain.read();//读类型
