@@ -68,9 +68,15 @@ public class DemoMessageStore {
 			dataout.writeUTF((String)header.getOrDefault("ScheduleExpression","null"));
 			dataout.writeUTF((String)header.getOrDefault("TraceId","null"));
 
+            if (bodytype==1) {
+				dataout.writeShort(body.length);//写body
+			}
+			else {
+				dataout.writeByte(body.length);
+			}
 
-			dataout.writeShort(body.length);//写body
 			dataout.write(body);
+
 		}
 
 
@@ -120,15 +126,18 @@ public class DemoMessageStore {
 		msg.putHeaders(MessageHeader.SEARCH_KEY,bufferin.readUTF());
 		msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,bufferin.readUTF());
 		msg.putHeaders(MessageHeader.TRACE_ID,bufferin.readUTF());
-
-		short bodylenth = bufferin.readShort();//读body
-		bodycontent = new byte[bodylenth];
-		bufferin.read(bodycontent);
-
 		if (typebody==1) {
+
+			short bodylenth = bufferin.readShort();//读body
+			bodycontent = new byte[bodylenth];
+			bufferin.read(bodycontent);
 			msg.setBody(byte2msg_gzip(bodycontent));
 			return msg;
-		}else{
+		}
+		else{
+			byte bodylenth = bufferin.readByte();
+			bodycontent = new byte[bodylenth];
+			bufferin.read(bodycontent);
 			msg.setBody(bodycontent);
 			return msg;
 		}
