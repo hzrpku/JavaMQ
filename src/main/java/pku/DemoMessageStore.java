@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import java.util.zip.ZipOutputStream;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipEntry;
+//import java.util.zip.ZipOutputStream;
+//import java.util.zip.ZipInputStream;
+//import java.util.zip.ZipEntry;
 
 
 public class DemoMessageStore {
@@ -60,14 +60,17 @@ public class DemoMessageStore {
 			dataout.writeLong((Long)header.get("StoreTimestamp"));
 			dataout.writeLong((Long)header.get("StartTime"));
 			dataout.writeLong((Long)header.get("StopTime"));
-			dataout.writeDouble((Double)header.get("ShardingKey"));
-			dataout.writeDouble((Double)header.get("ShardingPartition"));
+			//dataout.writeDouble((Double)header.get("ShardingKey"));
+			//dataout.writeDouble((Double)header.get("ShardingPartition"));
 			dataout.writeUTF(header.get("Topic")+","+
 					header.getOrDefault("BornHost","null")+","+
 					header.getOrDefault("StoreHost","null")+","+
 					header.getOrDefault("SearchKey","null")+","+
 					header.getOrDefault("ScheduleExpression","null")+","+
-					header.getOrDefault("TraceId","null"));
+					header.getOrDefault("TraceId","null")+","+
+					header.get("ShardingKey")+","+
+					header.get("ShardingPartition")
+			);
 			dataout.writeShort(body.length);//写body
 			dataout.write(body);
 		}
@@ -110,8 +113,8 @@ public class DemoMessageStore {
 		msg.putHeaders(MessageHeader.STORE_TIMESTAMP,bufferin.readLong());
 		msg.putHeaders(MessageHeader.START_TIME,bufferin.readLong());
 		msg.putHeaders(MessageHeader.STOP_TIME,bufferin.readLong());
-		msg.putHeaders(MessageHeader.SHARDING_KEY,bufferin.readDouble());
-		msg.putHeaders(MessageHeader.SHARDING_PARTITION,bufferin.readDouble());
+		//msg.putHeaders(MessageHeader.SHARDING_KEY,bufferin.readDouble());
+		//msg.putHeaders(MessageHeader.SHARDING_PARTITION,bufferin.readDouble());
 
 		String[] Headers = bufferin.readUTF().split(",");
 		msg.putHeaders(MessageHeader.TOPIC,Headers[0]);
@@ -120,6 +123,8 @@ public class DemoMessageStore {
 		msg.putHeaders(MessageHeader.SEARCH_KEY,Headers[3]);
 		msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,Headers[4]);
 		msg.putHeaders(MessageHeader.TRACE_ID,Headers[5]);
+		msg.putHeaders(MessageHeader.SHARDING_KEY,Headers[6]);
+		msg.putHeaders(MessageHeader.SHARDING_PARTITION,Headers[7]);
 
 		short bodylenth = bufferin.readShort();//读body
 		bodycontent = new byte[bodylenth];
