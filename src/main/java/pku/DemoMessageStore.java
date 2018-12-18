@@ -56,10 +56,10 @@ public class DemoMessageStore {
 			dataout.writeInt((Integer)header.get("Timeout"));
 			dataout.writeInt((Integer)header.get("Priority"));
 			dataout.writeInt((Integer)header.get("Reliability"));
-			dataout.writeLong((Long)header.get("BornTimestamp"));
-			dataout.writeLong((Long)header.get("StoreTimestamp"));
-			dataout.writeLong((Long)header.get("StartTime"));
-			dataout.writeLong((Long)header.get("StopTime"));
+			//dataout.writeLong((Long)header.get("BornTimestamp"));
+			//dataout.writeLong((Long)header.get("StoreTimestamp"));
+			//dataout.writeLong((Long)header.get("StartTime"));
+			//dataout.writeLong((Long)header.get("StopTime"));
 			//dataout.writeDouble((Double)header.get("ShardingKey"));
 			//dataout.writeDouble((Double)header.get("ShardingPartition"));
 			dataout.writeUTF(header.get("Topic")+","+
@@ -69,7 +69,12 @@ public class DemoMessageStore {
 					header.getOrDefault("ScheduleExpression","null")+","+
 					header.getOrDefault("TraceId","null")+","+
 					header.get("ShardingKey")+","+
-					header.get("ShardingPartition")
+					header.get("ShardingPartition")+","+
+					header.get("BornTimestamp")+","+
+					header.get("StoreTimestamp")+","+
+					header.get("StartTime")+","+
+					header.get("StopTime")
+
 			);
 			dataout.writeShort(body.length);//写body
 			dataout.write(body);
@@ -109,10 +114,10 @@ public class DemoMessageStore {
 		msg.putHeaders(MessageHeader.TIMEOUT,bufferin.readInt());
 		msg.putHeaders(MessageHeader.PRIORITY,bufferin.readInt());
 		msg.putHeaders(MessageHeader.RELIABILITY,bufferin.readInt());
-		msg.putHeaders(MessageHeader.BORN_TIMESTAMP,bufferin.readLong());
-		msg.putHeaders(MessageHeader.STORE_TIMESTAMP,bufferin.readLong());
-		msg.putHeaders(MessageHeader.START_TIME,bufferin.readLong());
-		msg.putHeaders(MessageHeader.STOP_TIME,bufferin.readLong());
+		//msg.putHeaders(MessageHeader.BORN_TIMESTAMP,bufferin.readLong());
+		//msg.putHeaders(MessageHeader.STORE_TIMESTAMP,bufferin.readLong());
+		//msg.putHeaders(MessageHeader.START_TIME,bufferin.readLong());
+		//msg.putHeaders(MessageHeader.STOP_TIME,bufferin.readLong());
 		//msg.putHeaders(MessageHeader.SHARDING_KEY,bufferin.readDouble());
 		//msg.putHeaders(MessageHeader.SHARDING_PARTITION,bufferin.readDouble());
 
@@ -123,8 +128,14 @@ public class DemoMessageStore {
 		msg.putHeaders(MessageHeader.SEARCH_KEY,Headers[3]);
 		msg.putHeaders(MessageHeader.SCHEDULE_EXPRESSION,Headers[4]);
 		msg.putHeaders(MessageHeader.TRACE_ID,Headers[5]);
+
 		msg.putHeaders(MessageHeader.SHARDING_KEY,Headers[6]);
 		msg.putHeaders(MessageHeader.SHARDING_PARTITION,Headers[7]);
+
+		msg.putHeaders(MessageHeader.BORN_TIMESTAMP,Headers[8]);
+		msg.putHeaders(MessageHeader.STORE_TIMESTAMP,Headers[9]);
+		msg.putHeaders(MessageHeader.START_TIME,Headers[10]);
+		msg.putHeaders(MessageHeader.STOP_TIME,Headers[11]);
 
 		short bodylenth = bufferin.readShort();//读body
 		bodycontent = new byte[bodylenth];
