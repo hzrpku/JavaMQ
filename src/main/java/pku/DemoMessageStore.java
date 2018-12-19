@@ -16,8 +16,8 @@ public class DemoMessageStore {
 
 
 	public void flush() throws IOException {
-		for (String file : files.keySet()) {
-			files.get(file).flush();
+		for (String topic : files.keySet()) {
+			files.get(topic).flush();
 		}
 
 	}
@@ -29,7 +29,7 @@ public class DemoMessageStore {
 		DataOutputStream dataout;
 		synchronized (files) {
 			if (!files.containsKey(topic)) {
-				BufferedOutputStream bufferout = new BufferedOutputStream(new FileOutputStream("data/" + topic, true),20*1024);
+				BufferedOutputStream bufferout = new BufferedOutputStream(new FileOutputStream("data/" + topic, true),256*1024);
 				dataout = new DataOutputStream(bufferout);
 				files.put(topic, dataout);
 			}
