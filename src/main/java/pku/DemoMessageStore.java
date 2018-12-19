@@ -59,8 +59,7 @@ public class DemoMessageStore {
 			dataout.writeLong(head.getLong("StopTime"));
 			dataout.writeDouble(head.getDouble("ShardingKey"));
 			dataout.writeDouble(head.getDouble("ShardingPartition"));
-			dataout.writeUTF(head.getString("Topic")+","+
-					header.getOrDefault("BornHost","null")+","+
+			dataout.writeUTF(header.getOrDefault("BornHost","null")+","+
 					header.getOrDefault("StoreHost","null")+","+
 					header.getOrDefault("SearchKey","null")+","+
 					header.getOrDefault("ScheduleExpression","null")+","+
@@ -114,12 +113,11 @@ public class DemoMessageStore {
 		msg.putHeaders("ShardingPartition",datain.readDouble());
 
 		String[] Headers = datain.readUTF().split(",");
-		msg.putHeaders("Topic",Headers[0]);
-		msg.putHeaders("BornHost",Headers[1]);
-		msg.putHeaders("StoreHost",Headers[2]);
-		msg.putHeaders("SearchKey",Headers[3]);
-		msg.putHeaders("ScheduleExpression",Headers[4]);
-		msg.putHeaders("TraceId",Headers[5]);
+		msg.putHeaders("BornHost",Headers[0]);
+		msg.putHeaders("StoreHost",Headers[1]);
+		msg.putHeaders("SearchKey",Headers[2]);
+		msg.putHeaders("ScheduleExpression",Headers[3]);
+		msg.putHeaders("TraceId",Headers[4]);
 		if (typebody==1) {
 			bodylenth = datain.readShort();//读body
 		}
