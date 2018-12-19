@@ -38,7 +38,7 @@ public class DemoMessageStore {
 		}
 		byte bodytype;
 
-		if (msg.getBody().length>256){
+		if (msg.getBody().length>512){
 			body =msg2byte_gzip(msg.getBody());
 			bodytype=1;
 		}
@@ -50,17 +50,17 @@ public class DemoMessageStore {
 		Map<String,Object> header = head.getMap();
 		synchronized (dataout) { //同步同一对象
 			dataout.writeByte(bodytype);//写类型
-			dataout.writeInt((Integer)header.get("MessageId"));//写头部
-			dataout.writeInt((Integer)header.get("Timeout"));
-			dataout.writeInt((Integer)header.get("Priority"));
-			dataout.writeInt((Integer)header.get("Reliability"));
-			dataout.writeLong((Long)header.get("BornTimestamp"));
-			dataout.writeLong((Long)header.get("StoreTimestamp"));
-			dataout.writeLong((Long)header.get("StartTime"));
-			dataout.writeLong((Long)header.get("StopTime"));
-			dataout.writeDouble((Double)header.get("ShardingKey"));
-			dataout.writeDouble((Double)header.get("ShardingPartition"));
-			dataout.writeUTF(header.get("Topic")+","+
+			dataout.writeInt(head.getInt("MessageId"));//写头部
+			dataout.writeInt(head.getInt("Timeout"));
+			dataout.writeInt(head.getInt("Priority"));
+			dataout.writeInt(head.getInt("Reliability"));
+			dataout.writeLong(head.getLong("BornTimestamp"));
+			dataout.writeLong(head.getLong("StoreTimestamp"));
+			dataout.writeLong(head.getLong("StartTime"));
+			dataout.writeLong(head.getLong("StopTime"));
+			dataout.writeDouble(head.getDouble("ShardingKey"));
+			dataout.writeDouble(head.getDouble("ShardingPartition"));
+			dataout.writeUTF(head.getString("Topic")+","+
 					header.getOrDefault("BornHost","null")+","+
 					header.getOrDefault("StoreHost","null")+","+
 					header.getOrDefault("SearchKey","null")+","+
