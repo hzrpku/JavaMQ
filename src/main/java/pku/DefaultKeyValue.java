@@ -38,8 +38,8 @@ public class DefaultKeyValue implements KeyValue{
         return (Integer) kvs.getOrDefault(key, 0);
     }
 
-    public int getLong(String key) {
-        return Integer.parseInt( (String.valueOf(kvs.getOrDefault(key, 0L))));
+    public long getLong(String key) {
+        return (Long) kvs.getOrDefault(key, 0L);
     }
 
     public double getDouble(String key) {
