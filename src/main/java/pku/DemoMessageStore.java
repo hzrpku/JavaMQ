@@ -1,8 +1,6 @@
 package pku;
 
 import java.io.*;
-
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
@@ -31,7 +29,7 @@ public class DemoMessageStore {
 		DataOutputStream dataout;
 		synchronized (files) {
 			if (!files.containsKey(topic)) {
-				dataout = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("data/" + topic, true)));
+				dataout = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("data/" + topic, true),28*1024));
 				files.put(topic, dataout);
 			}
 
@@ -51,10 +49,10 @@ public class DemoMessageStore {
 		Map<String,Object> header = head.getMap();
 		synchronized (dataout) { //同步同一对象
 			dataout.writeByte(bodytype);//写类型
-			dataout.writeInt((Integer) header.get("MessageId"));//写头部
-			dataout.writeInt((Integer) header.get("Timeout"));
-			dataout.writeInt((Integer) header.get("Priority"));
-			dataout.writeInt((Integer) header.get("Reliability"));
+			dataout.writeInt((Integer)header.get("MessageId"));//写头部
+			dataout.writeInt((Integer)header.get("Timeout"));
+			dataout.writeInt((Integer)header.get("Priority"));
+			dataout.writeInt((Integer)header.get("Reliability"));
 			dataout.writeLong((Long)header.get ("BornTimestamp"));
 			dataout.writeLong((Long)header.get("StoreTimestamp"));
 			dataout.writeLong((Long)header.get("StartTime"));
