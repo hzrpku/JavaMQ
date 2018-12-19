@@ -29,12 +29,12 @@ public class DemoMessageStore {
 		DataOutputStream dataout;
 		synchronized (files) {
 			if (!files.containsKey(topic)) {
-				dataout = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("data/" + topic, true)));
+				BufferedOutputStream bufferout = new BufferedOutputStream(new FileOutputStream("data/" + topic, true),16*1024);
+				dataout = new DataOutputStream(bufferout);
 				files.put(topic, dataout);
 			}
 
 			dataout = files.get(topic);
-
 		}
 		byte bodytype;
 
