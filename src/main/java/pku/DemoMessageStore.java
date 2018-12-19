@@ -38,7 +38,7 @@ public class DemoMessageStore {
 		}
 		byte bodytype;
 
-		if (msg.getBody().length>2048){
+		if (msg.getBody().length>256){
 			body =msg2byte_gzip(msg.getBody());
 			bodytype=1;
 		}
@@ -82,7 +82,6 @@ public class DemoMessageStore {
 	ByteMessage pull(String topic) throws IOException {
 		byte[] bodycontent;
 		short bodylenth;
-		//DataInputStream datain;
 
 		String toc = topic + Thread.currentThread().getName();
 		if (!bufferinput.containsKey(toc)) {
