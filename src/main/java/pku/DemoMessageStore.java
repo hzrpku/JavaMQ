@@ -29,8 +29,7 @@ public class DemoMessageStore {
 		DataOutputStream dataout;
 		synchronized (files) {
 			if (!files.containsKey(topic)) {
-				BufferedOutputStream bufferout = new BufferedOutputStream(new FileOutputStream("data/" + topic, true),12*1024);
-				dataout = new DataOutputStream(bufferout);
+				dataout = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("data/" + topic, true)));
 				files.put(topic, dataout);
 			}
 
