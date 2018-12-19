@@ -23,7 +23,7 @@ public interface KeyValue {
 
     public int getInt(String key);
 
-    public long getLong(String key);
+    public int getLong(String key);
 
     public double getDouble(String key);
 

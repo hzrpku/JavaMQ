@@ -38,7 +38,7 @@ public class DemoMessageStore {
 		}
 		byte bodytype;
 
-		if (msg.getBody().length>1280){
+		if (msg.getBody().length>1024){
 			body =msg2byte_gzip(msg.getBody());
 			bodytype=1;
 		}
@@ -54,10 +54,11 @@ public class DemoMessageStore {
 			dataout.writeInt((Integer)header.get("Timeout"));
 			dataout.writeInt((Integer)header.get("Priority"));
 			dataout.writeInt((Integer)header.get("Reliability"));
-			dataout.writeLong((Long)header.get("BornTimestamp"));
-			dataout.writeLong((Long)header.get("StoreTimestamp"));
-			dataout.writeLong((Long)header.get("StartTime"));
-			dataout.writeLong((Long)header.get("StopTime"));
+
+			dataout.writeInt((Integer) msg.headers().getLong("BornTimestamp"));
+			dataout.writeInt((Integer) msg.headers().getLong("StoreTimestamp"));
+			dataout.writeInt((Integer) msg.headers().getLong("StartTime"));
+			dataout.writeInt((Integer) msg.headers().getLong("StopTime"));
 			dataout.writeDouble((Double)header.get("ShardingKey"));
 			dataout.writeDouble((Double)header.get("ShardingPartition"));
 			dataout.writeUTF(header.get("Topic")+","+
@@ -109,10 +110,10 @@ public class DemoMessageStore {
 		msg.putHeaders(MessageHeader.TIMEOUT,datain.readInt());
 		msg.putHeaders(MessageHeader.PRIORITY,datain.readInt());
 		msg.putHeaders(MessageHeader.RELIABILITY,datain.readInt());
-		msg.putHeaders(MessageHeader.BORN_TIMESTAMP,datain.readLong());
-		msg.putHeaders(MessageHeader.STORE_TIMESTAMP,datain.readLong());
-		msg.putHeaders(MessageHeader.START_TIME,datain.readLong());
-		msg.putHeaders(MessageHeader.STOP_TIME,datain.readLong());
+		msg.putHeaders(MessageHeader.BORN_TIMESTAMP,datain.readInt());
+		msg.putHeaders(MessageHeader.STORE_TIMESTAMP,datain.readInt());
+		msg.putHeaders(MessageHeader.START_TIME,datain.readInt());
+		msg.putHeaders(MessageHeader.STOP_TIME,datain.readInt());
 		msg.putHeaders(MessageHeader.SHARDING_KEY,datain.readDouble());
 		msg.putHeaders(MessageHeader.SHARDING_PARTITION,datain.readDouble());
 
