@@ -2,6 +2,7 @@ package pku;
 
 import java.io.*;
 
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
@@ -13,6 +14,7 @@ public class DemoMessageStore {
 	static final DemoMessageStore store = new DemoMessageStore();
 	HashMap<String, DataOutputStream> files = new HashMap<>();
 	HashMap<String, DataInputStream> bufferinput = new HashMap<>();
+
 
 
 	public void flush() throws IOException {
@@ -37,7 +39,7 @@ public class DemoMessageStore {
 		}
 		byte bodytype;
 
-		if (msg.getBody().length>512){
+		if (msg.getBody().length>1024){
 			body =msg2byte_gzip(msg.getBody());
 			bodytype=1;
 		}

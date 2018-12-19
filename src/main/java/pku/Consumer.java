@@ -38,7 +38,7 @@ public class Consumer {
 
         }
         else {
-            re.putHeaders("Topic",topics.get(readpos));
+            re.putHeaders("Topic",topics.get(readpos));//put topic
             return re;
         }
 
