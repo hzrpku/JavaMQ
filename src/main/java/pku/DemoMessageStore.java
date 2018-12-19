@@ -88,7 +88,7 @@ public class DemoMessageStore {
 				return null;
 			}
 
-			DataInputStream datain = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
+			DataInputStream datain = new DataInputStream(new BufferedInputStream(new FileInputStream("data/" + topic)));
 			bufferinput.put(toc, datain);
 
 		}
