@@ -122,17 +122,15 @@ public class DemoMessageStore {
 
 		if (typebody==1) {
 			bodylenth = datain.readShort();//读body
+			bodycontent = new byte[bodylenth];
+			datain.read(bodycontent);
+			msg.setBody(byte2msg_gzip(bodycontent));
+			return msg;
 		}
 		else {
 			bodylenth = datain.readByte();
-		}
-		bodycontent = new byte[bodylenth];
-		datain.read(bodycontent);
-
-		if (typebody==1) {
-			msg.setBody(byte2msg_gzip(bodycontent));
-			return msg;
-		}else{
+			bodycontent = new byte[bodylenth];
+			datain.read(bodycontent);
 			msg.setBody(bodycontent);
 			return msg;
 		}
