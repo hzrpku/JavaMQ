@@ -29,7 +29,7 @@ public class DemoMessageStore {
 		DataOutputStream dataout;
 		synchronized (files) {
 			if (!files.containsKey(topic)) {
-				dataout = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("data/" + topic, true),256*1024));
+				dataout = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("data/" + topic, true)));
 				files.put(topic, dataout);
 			}
 
@@ -88,7 +88,7 @@ public class DemoMessageStore {
 				return null;
 			}
 
-			DataInputStream datain = new DataInputStream(new BufferedInputStream(new FileInputStream("data/" + topic)));
+			DataInputStream datain = new DataInputStream(new BufferedInputStream(new FileInputStream("data/" + topic),256*1024));
 			bufferinput.put(toc, datain);
 
 		}
