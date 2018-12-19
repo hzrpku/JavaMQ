@@ -58,14 +58,17 @@ public class DemoMessageStore {
 			dataout.writeLong((Long)header.get("StoreTimestamp"));
 			dataout.writeLong((Long)header.get("StartTime"));
 			dataout.writeLong((Long)header.get("StopTime"));
-			dataout.writeDouble((Double)header.get("ShardingKey"));
-			dataout.writeDouble((Double)header.get("ShardingPartition"));
+			//dataout.writeDouble((Double)header.get("ShardingKey"));
+			//dataout.writeDouble((Double)header.get("ShardingPartition"));
 			dataout.writeUTF(header.get("Topic")+","+
 					header.getOrDefault("BornHost","null")+","+
 					header.getOrDefault("StoreHost","null")+","+
 					header.getOrDefault("SearchKey","null")+","+
 					header.getOrDefault("ScheduleExpression","null")+","+
-					header.getOrDefault("TraceId","null"));
+					header.getOrDefault("TraceId","null")+","+
+					header.get("ShardingKey")+","+
+					header.get("ShardingPartition")
+			);
 			if (bodytype==1) {
 				dataout.writeShort(body.length);//写body
 			}
@@ -113,8 +116,8 @@ public class DemoMessageStore {
 		msg.putHeaders("StoreTimestamp",datain.readLong());
 		msg.putHeaders("StartTime",datain.readLong());
 		msg.putHeaders("StopTime",datain.readLong());
-		msg.putHeaders("ShardingKey",datain.readDouble());
-		msg.putHeaders("ShardingPartition",datain.readDouble());
+		//msg.putHeaders("ShardingKey",datain.readDouble());
+		//msg.putHeaders("ShardingPartition",datain.readDouble());
 
 		String[] Headers = datain.readUTF().split(",");
 		msg.putHeaders("Topic",Headers[0]);
@@ -123,6 +126,8 @@ public class DemoMessageStore {
 		msg.putHeaders("SearchKey",Headers[3]);
 		msg.putHeaders("ScheduleExpression",Headers[4]);
 		msg.putHeaders("TraceId",Headers[5]);
+		msg.putHeaders("ShardingKey",Headers[6]);
+		msg.putHeaders("ShardingPartition",Headers[7]);
 		if (typebody==1) {
 			bodylenth = datain.readShort();//读body
 		}
