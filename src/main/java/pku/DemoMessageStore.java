@@ -88,7 +88,7 @@ public class DemoMessageStore {
 				return null;
 			}
 
-			DataInputStream datain = new DataInputStream(new BufferedInputStream(new FileInputStream("data/" + topic),12*1024));
+			DataInputStream datain = new DataInputStream(new BufferedInputStream(new FileInputStream("data/" + topic),16*1024));
 			bufferinput.put(toc, datain);
 
 		}
@@ -100,25 +100,27 @@ public class DemoMessageStore {
 			return null;
 		}
 		DefaultMessage msg = new DefaultMessage();
+		KeyValue header = msg.headers();
 
 
-		msg.putHeaders("MessageId",datain.readInt());//读头部
-		msg.putHeaders("Timeout",datain.readInt());
-		msg.putHeaders("Priority",datain.readInt());
-		msg.putHeaders("Reliability",datain.readInt());
-		msg.putHeaders("BornTimestamp",datain.readLong());
-		msg.putHeaders("StoreTimestamp",datain.readLong());
-		msg.putHeaders("StartTime",datain.readLong());
-		msg.putHeaders("StopTime",datain.readLong());
-		msg.putHeaders("ShardingKey",datain.readDouble());
-		msg.putHeaders("ShardingPartition",datain.readDouble());
+		header.put("MessageId",datain.readInt());//读头部
+		header.put("Timeout",datain.readInt());
+		header.put("Priority",datain.readInt());
+		header.put("Reliability",datain.readInt());
+		header.put("BornTimestamp",datain.readLong());
+		header.put("StoreTimestamp",datain.readLong());
+		header.put("StartTime",datain.readLong());
+		header.put("StopTime",datain.readLong());
+		header.put("ShardingKey",datain.readDouble());
+		header.put("ShardingPartition",datain.readDouble());
 
 		String[] Headers = datain.readUTF().split(",");
-		msg.putHeaders("BornHost",Headers[0]);
-		msg.putHeaders("StoreHost",Headers[1]);
-		msg.putHeaders("SearchKey",Headers[2]);
-		msg.putHeaders("ScheduleExpression",Headers[3]);
-		msg.putHeaders("TraceId",Headers[4]);
+		header.put("BornHost",Headers[0]);
+		header.put("StoreHost",Headers[1]);
+		header.put("SearchKey",Headers[2]);
+		header.put("ScheduleExpression",Headers[3]);
+		header.put("TraceId",Headers[4]);
+		msg.setHeaders(header);
 
 		if (typebody==1) {
 			bodylenth = datain.readShort();//读body
