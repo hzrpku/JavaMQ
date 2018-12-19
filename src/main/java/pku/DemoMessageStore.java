@@ -29,7 +29,7 @@ public class DemoMessageStore {
 		DataOutputStream dataout;
 		synchronized (files) {
 			if (!files.containsKey(topic)) {
-				dataout = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("data/" + topic, true),16*1024));
+				dataout = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("data/" + topic, true),28*1024));
 				files.put(topic, dataout);
 			}
 
@@ -53,11 +53,10 @@ public class DemoMessageStore {
 			dataout.writeInt((Integer)header.get("Timeout"));
 			dataout.writeInt((Integer)header.get("Priority"));
 			dataout.writeInt((Integer)header.get("Reliability"));
-
-			dataout.writeInt(head.getInt ("BornTimestamp"));
-			dataout.writeInt(head.getInt("StoreTimestamp"));
-			dataout.writeInt(head.getInt("StartTime"));
-			dataout.writeInt(head.getInt("StopTime"));
+			dataout.writeLong((Long)header.get ("BornTimestamp"));
+			dataout.writeLong((Long)header.get("StoreTimestamp"));
+			dataout.writeLong((Long)header.get("StartTime"));
+			dataout.writeLong((Long)header.get("StopTime"));
 			dataout.writeDouble((Double)header.get ("ShardingKey"));
 			dataout.writeDouble((Double)header.get("ShardingPartition"));
 			dataout.writeUTF(header.getOrDefault("BornHost","null")+","+
@@ -89,7 +88,7 @@ public class DemoMessageStore {
 				return null;
 			}
 
-			DataInputStream datain = new DataInputStream(new BufferedInputStream(new FileInputStream("data/" + topic),12*1024));
+			DataInputStream datain = new DataInputStream(new BufferedInputStream(new FileInputStream("data/" + topic),10*1024));
 			bufferinput.put(toc, datain);
 
 		}
@@ -108,10 +107,10 @@ public class DemoMessageStore {
 		header.put("Timeout",datain.readInt());
 		header.put("Priority",datain.readInt());
 		header.put("Reliability",datain.readInt());
-		header.put("BornTimestamp",datain.readInt());
-		header.put("StoreTimestamp",datain.readInt());
-		header.put("StartTime",datain.readInt());
-		header.put("StopTime",datain.readInt());
+		header.put("BornTimestamp",datain.readLong());
+		header.put("StoreTimestamp",datain.readLong());
+		header.put("StartTime",datain.readLong());
+		header.put("StopTime",datain.readLong());
 		header.put("ShardingKey",datain.readDouble());
 		header.put("ShardingPartition",datain.readDouble());
 
