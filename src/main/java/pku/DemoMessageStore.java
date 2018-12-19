@@ -29,7 +29,7 @@ public class DemoMessageStore {
 		DataOutputStream dataout;
 		synchronized (files) {
 			if (!files.containsKey(topic)) {
-				dataout = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("data/" + topic, true),1024*1024));
+				dataout = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("data/" + topic, true),2048*1024));
 				files.put(topic, dataout);
 			}
 
@@ -88,7 +88,7 @@ public class DemoMessageStore {
 				return null;
 			}
 
-			DataInputStream datain = new DataInputStream(new BufferedInputStream(new FileInputStream("data/" + topic),1024*1024));
+			DataInputStream datain = new DataInputStream(new BufferedInputStream(new FileInputStream("data/" + topic),2048*1024));
 			bufferinput.put(toc, datain);
 
 		}
@@ -100,24 +100,26 @@ public class DemoMessageStore {
 			return null;
 		}
 		DefaultMessage msg = new DefaultMessage();
+		KeyValue headers = msg.headers;
 
-		msg.putHeaders("MessageId",datain.readInt());//读头部
-		msg.putHeaders("Timeout",datain.readInt());
-		msg.putHeaders("Priority",datain.readInt());
-		msg.putHeaders("Reliability",datain.readInt());
-		msg.putHeaders("BornTimestamp",datain.readLong());
-		msg.putHeaders("StoreTimestamp",datain.readLong());
-		msg.putHeaders("StartTime",datain.readLong());
-		msg.putHeaders("StopTime",datain.readLong());
-		msg.putHeaders("ShardingKey",datain.readDouble());
-		msg.putHeaders("ShardingPartition",datain.readDouble());
+		headers.put("MessageId",datain.readInt());//读头部
+		headers.put("Timeout",datain.readInt());
+		headers.put("Priority",datain.readInt());
+		headers.put("Reliability",datain.readInt());
+		headers.put("BornTimestamp",datain.readLong());
+		headers.put("StoreTimestamp",datain.readLong());
+		headers.put("StartTime",datain.readLong());
+		headers.put("StopTime",datain.readLong());
+		headers.put("ShardingKey",datain.readDouble());
+		headers.put("ShardingPartition",datain.readDouble());
 
 		String[] Headers = datain.readUTF().split(",");
-		msg.putHeaders("BornHost",Headers[0]);
-		msg.putHeaders("StoreHost",Headers[1]);
-		msg.putHeaders("SearchKey",Headers[2]);
-		msg.putHeaders("ScheduleExpression",Headers[3]);
-		msg.putHeaders("TraceId",Headers[4]);
+		headers.put("BornHost",Headers[0]);
+		headers.put("StoreHost",Headers[1]);
+		headers.put("SearchKey",Headers[2]);
+		headers.put("ScheduleExpression",Headers[3]);
+		headers.put("TraceId",Headers[4]);
+		msg.setHeaders(headers);
 		if (typebody==1) {
 			bodylenth = datain.readShort();//读body
 		}
