@@ -49,16 +49,16 @@ public class DemoMessageStore {
 		Map<String,Object> header = head.getMap();
 		synchronized (dataout) { //同步同一对象
 			dataout.writeByte(bodytype);//写类型
-			dataout.writeInt(head.getInt("MessageId"));//写头部
-			dataout.writeInt(head.getInt("Timeout"));
-			dataout.writeInt(head.getInt("Priority"));
-			dataout.writeInt(head.getInt("Reliability"));
-			dataout.writeLong(head.getLong("BornTimestamp"));
-			dataout.writeLong(head.getLong("StoreTimestamp"));
-			dataout.writeLong(head.getLong("StartTime"));
-			dataout.writeLong(head.getLong("StopTime"));
-			dataout.writeDouble(head.getDouble("ShardingKey"));
-			dataout.writeDouble(head.getDouble("ShardingPartition"));
+			dataout.writeInt((Integer) header.get("MessageId"));//写头部
+			dataout.writeInt((Integer) header.get("Timeout"));
+			dataout.writeInt((Integer) header.get("Priority"));
+			dataout.writeInt((Integer) header.get("Reliability"));
+			dataout.writeLong((Long)header.get ("BornTimestamp"));
+			dataout.writeLong((Long)header.get("StoreTimestamp"));
+			dataout.writeLong((Long)header.get("StartTime"));
+			dataout.writeLong((Long)header.get("StopTime"));
+			dataout.writeDouble((Double)header.get ("ShardingKey"));
+			dataout.writeDouble((Double)header.get("ShardingPartition"));
 			dataout.writeUTF(header.getOrDefault("BornHost","null")+","+
 					header.getOrDefault("StoreHost","null")+","+
 					header.getOrDefault("SearchKey","null")+","+
