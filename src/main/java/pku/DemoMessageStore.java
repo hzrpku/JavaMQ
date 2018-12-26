@@ -10,7 +10,7 @@ import java.util.zip.GZIPOutputStream;
 
 public class DemoMessageStore {
 	static final DemoMessageStore store = new DemoMessageStore();
-	HashMap<String, DataOutputStream> files = new HashMap<>();
+	static HashMap<String, DataOutputStream> files = new HashMap<>();
 	HashMap<String, DataInputStream> bufferinput = new HashMap<>();
 
 
@@ -29,12 +29,13 @@ public class DemoMessageStore {
 		DataOutputStream dataout;
 		synchronized (files) {
 			if (!files.containsKey(topic)) {
-				dataout = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("data/" + topic, true),28*1024));
+				dataout = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("data/" + topic, true), 28 * 1024));
 				files.put(topic, dataout);
 			}
-
-			dataout = files.get(topic);
 		}
+			dataout = files.get(topic);
+
+
 		byte bodytype;
 
 		if (msg.getBody().length>512){
