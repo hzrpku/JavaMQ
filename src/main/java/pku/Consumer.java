@@ -2,7 +2,7 @@ package pku;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.zip.DataFormatException;
+
 
 public class Consumer {
     DemoMessageStore store = new DemoMessageStore();

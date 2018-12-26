@@ -38,7 +38,7 @@ public class DemoMessageStore {
 		byte bodytype;
 
 		if (msg.getBody().length>512){
-			body =msg2byte_gzip(msg.getBody());
+			body =msg2byte(msg.getBody());
 			bodytype=1;
 		}
 		else{
@@ -81,18 +81,18 @@ public class DemoMessageStore {
 		byte[] bodycontent;
 		short bodylenth;
 
-		String toc = topic + Thread.currentThread().getName();
-		if (!bufferinput.containsKey(toc)) {
+
+		if (!bufferinput.containsKey(topic)) {
 			File file = new File("data/" + topic);
 			if (!file.exists()) {
 				return null;
 			}
 
 			DataInputStream datain = new DataInputStream(new BufferedInputStream(new FileInputStream("data/" + topic),16*1024));
-			bufferinput.put(toc, datain);
+			bufferinput.put(topic, datain);
 
 		}
-		DataInputStream datain = bufferinput.get(toc);
+		DataInputStream datain = bufferinput.get(topic);
 /*******************read*************************/
 
 		int typebody = datain.read();//读类型
@@ -126,7 +126,7 @@ public class DemoMessageStore {
 			bodylenth = datain.readShort();//读body
 			bodycontent = new byte[bodylenth];
 			datain.read(bodycontent);
-			msg.setBody(byte2msg_gzip(bodycontent));
+			msg.setBody(byte2msg(bodycontent));
 			return msg;
 		}
 		else {
@@ -139,7 +139,7 @@ public class DemoMessageStore {
 
 	}
 
-	public static byte[] msg2byte_gzip(byte[] data) {
+	public static byte[] msg2byte(byte[] data) {
 		byte[] b = null;
 		try {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -154,7 +154,7 @@ public class DemoMessageStore {
 		return b;
 	}
 
-	public static byte[] byte2msg_gzip(byte[] data) {
+	public static byte[] byte2msg(byte[] data) {
 		byte[] b = null;
 		try {
 			ByteArrayInputStream bis = new ByteArrayInputStream(data);
